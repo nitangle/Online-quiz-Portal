@@ -1,1 +1,8 @@
-*.pyc
+#byte complied files
+*.pyc 
+*.py~
+#swap files
+*.swp
+
+#pycharm folder
+.idea/
