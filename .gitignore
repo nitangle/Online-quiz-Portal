@@ -6,3 +6,6 @@
 
 #pycharm folder
 .idea/
+
+#python cache file
+__pycache__/
