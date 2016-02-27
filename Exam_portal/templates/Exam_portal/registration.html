@@ -2,39 +2,70 @@
 
 
 {% block content %}
-<div class="container" style="padding-top: 4%;">
-    <div class="jumbotron" style="padding-top:2%;" >
-    <h2 >Registration</h2>
+    <style>
+        body {
+            position: relative;
+        }
 
-    {% csrf_token %}
-          <div class="row">
-            <form class="col s12">
-              <div class="row">
-                <div class="input-field col s6">
+        {% comment %}
+        #section1 {padding-top:50px;height:500px;color: #fff; }
+        #section2 {padding-top:50px;height:500px;color: #fff; }
+        #section3 {padding-top:50px;height:500px;color: #fff; }
+        {% endcomment %}
 
-                  {{ form.Name }}
-                  <label for="icon_prefix">{{ form.Name.label }}</label>
+    </style>
+
+
+
+    <div class="container" style="padding-top: 1.5%;">
+
+        <div class="jumbotron" style="padding-top:2%;">
+            <h2>Registration</h2>
+
+
+
+            {% comment %}<h2>Registration</h2>{% endcomment %}
+            <form action="{% url 'Exam_portal:register' %}" method="POST">
+                <div id="section1">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col s12">
+                            <div class="row">
+                                <div class="input-field col s6">
+
+                                    {{ form.Name }}
+                                    <label for="icon_prefix">{{ form.Name.label }}</label>
+                                </div>
+                                <div class="input-field col s6">
+
+                                    {{ form.Contact }}
+                                    <label for="icon_telephone">{{ form.Contact.label }}</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col s12">
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    {{ form.Email }}
+                                    <label for="email" data-error="wrong"
+                                           data-success="right">{{ form.Email.label }}</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
-                <div class="input-field col s6">
+                <div id="section2" class="container-fluid">
 
-                  {{ form.Contact }}
-                  <label for="icon_telephone">{{ form.Contact.label }}</label>
                 </div>
-              </div>
+                <div id="section3" class="container-fluid">
+
+                    <input type="submit" value="Register" class="btn"/>
+                </div>
             </form>
-          </div>
-
-          <div class="row">
-            <form class="col s12">
-              <div class="row">
-                <div class="input-field col s12">
-                  {{ form.Email }}
-                  <label for="email" data-error="wrong" data-success="right">{{ form.Email.label }}</label>
-                </div>
-              </div>
-            </form>
-          </div>
-
+        </div>
     </div>
-</div>
 {% endblock content %}
