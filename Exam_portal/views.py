@@ -27,7 +27,8 @@ def register(request):
         'title': 'SI recruitment',
         'form': form,
     }
-    return render(request, 'Exam_portal/registration.html', context)
+    return render(request, 'Exam_portal/register.html', context)
+
 
 
 def instruction(request):
