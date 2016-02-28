@@ -14,3 +14,7 @@ class RegistrationForm(forms.Form):
     Email = forms.EmailField(widget=forms.TextInput(
         attrs={'type': 'email', 'id': 'email', 'class': 'validate'}),
                              label="Email")
+    CHOICES=[('select1','select 1'),
+         ('select2','select 2')]
+
+    like = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect())

@@ -15,14 +15,14 @@ class Student(models.Model):
 
 
 class Category(models.Model):
-    category = models.CharField(max_length=10)
+    category = models.CharField(max_length=20)
 
     class Meta:
         verbose_name_plural = "Categories"
 
 
 class Question(models.Model):
-    question_text = models.CharField(max_length=10)
+    question_text = models.CharField(max_length=20)
     negative = models.BooleanField()
     marks = models.IntegerField()
     type = models.ForeignKey(Category, on_delete=models.CASCADE)

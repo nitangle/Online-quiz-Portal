@@ -13,17 +13,23 @@ def register(request):
     form = RegistrationForm()
     if request.method == "POST":
         form = RegistrationForm(request.POST or None)
-        print("hello")
+        #print("hello")
+
         if form.is_valid():
             name = form.cleaned_data['Name']
             email = form.cleaned_data['Email']
             contact = form.cleaned_data['Contact']
 
-            print("hello" + name)
+            #print("hello" + name)
 
-        print (form.errors)
+        #print (form.errors)
     context = {
         'title': 'SI recruitment',
         'form': form,
     }
     return render(request, 'Exam_portal/registration.html', context)
+
+
+def instruction(request):
+    #nothing to do here
+    return render(request,"Exam_portal/instruction.html" , context={})
