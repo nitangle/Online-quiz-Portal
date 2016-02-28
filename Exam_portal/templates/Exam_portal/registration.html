@@ -2,70 +2,135 @@
 
 
 {% block content %}
-    <style>
-        body {
-            position: relative;
-        }
+<style>
+    body {
+        position: relative;
+    }
 
-        {% comment %}
-        #section1 {padding-top:50px;height:500px;color: #fff; }
-        #section2 {padding-top:50px;height:500px;color: #fff; }
-        #section3 {padding-top:50px;height:500px;color: #fff; }
-        {% endcomment %}
+    {
+    %
+    comment
+    %
+    }
+    #section1 {
+        padding-top: 50px;
+        height: 500px;
+        color: #fff;
+    }
 
-    </style>
+    #section2 {
+        padding-top: 50px;
+        height: 500px;
+        color: #fff;
+    }
+
+    #section3 {
+        padding-top: 50px;
+        height: 500px;
+        color: #fff;
+    }
+
+    {
+    %
+    endcomment
+    %
+    }
+
+</style>
 
 
+<div class="container" style="padding-top: 1.5%;">
 
-    <div class="container" style="padding-top: 1.5%;">
-
-        <div class="jumbotron" style="padding-top:2%;">
-            <h2>Registration</h2>
-
+    <div class="jumbotron" style="padding-top:2%;">
+        <h2>Registration</h2>
 
 
-            {% comment %}<h2>Registration</h2>{% endcomment %}
-            <form action="{% url 'Exam_portal:register' %}" method="POST">
-                <div id="section1">
-                    {% csrf_token %}
-                    <div class="row">
-                        <div class="col s12">
-                            <div class="row">
-                                <div class="input-field col s6">
+        {% comment %}<h2>Registration</h2>{% endcomment %}
+        <form action="{% url 'Exam_portal:register' %}" method="POST">
+            <div id="section1">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col s12">
+                        <div class="row">
+                            <div class="input-field col s6">
 
-                                    {{ form.Name }}
-                                    <label for="icon_prefix">{{ form.Name.label }}</label>
-                                </div>
-                                <div class="input-field col s6">
+                                {{ form.Name }}
+                                <label for="icon_prefix">{{ form.Name.label }}</label>
+                            </div>
+                            <div class="input-field col s6">
 
-                                    {{ form.Contact }}
-                                    <label for="icon_telephone">{{ form.Contact.label }}</label>
-                                </div>
+                                {{ form.Contact }}
+                                <label for="icon_telephone">{{ form.Contact.label }}</label>
                             </div>
                         </div>
                     </div>
-
-                    <div class="row">
-                        <div class="col s12">
-                            <div class="row">
-                                <div class="input-field col s12">
-                                    {{ form.Email }}
-                                    <label for="email" data-error="wrong"
-                                           data-success="right">{{ form.Email.label }}</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
-                <div id="section2" class="container-fluid">
 
+                <div class="row">
+                    <div class="col s12">
+                        <div class="row">
+                            <div class="input-field col s12">
+                                {{ form.Email }}
+                                <label for="email" data-error="wrong"
+                                       data-success="right">{{ form.Email.label }}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div id="section2" class="container-fluid">
+                <div class="row">
+                    <div class="col s12">
+                        <div class="row">
+                            <div class="input-field col s6">
+
+                                {{ form.StudentNo }}
+                                {{ form.Student.label }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s12">
+                        <div class="row">
+                            <div class="input-field col s6">
+
+                                {{ form.Branch}}
+                            <label for="branch">{{ form.Branch.label }}</label>
+                            </div>
+
+                            <div class="input-field col s6">
+                                {{ form.Skills }
+                            <label for="icon_prefix">{{ form.Skills.label }}</label>
+
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div id="section3" class="container-fluid">
+                    <div class="row">
+                        <div class="col s12">
+                            <div class="row">
+                                <div class="input-field col s6">
 
+                                    {{ form.Hosteler }}
+                                <label for="test1">{{ form.Hosteler.label }}</label>
+                                </div>
+
+                                <div class="input-field col s6">
+
+                                    {{ form.Designer }}
+                                <label for="icon_prefix">{{ form.Designer.label }}</label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
                     <input type="submit" value="Register" class="btn"/>
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
+</div>
 {% endblock content %}
