@@ -1,0 +1,31 @@
+{% extends 'Exam_portal/base.html' %}
+
+
+{% block ajax %}
+    {% csrf_token %}
+    <div class="container">
+
+        <ul class="ul">
+            <li id=1 class='click' name="ajaxdisplay">hello</li>
+            <li id=2 class='click'>ajax</li>
+        </ul>
+
+{#        <div class="container">#}
+{#            <nav class="navbar navbar-default">#}
+{#                <div class="container-fluid">#}
+{#                    <ul class="nav navbar-nav">#}
+{##}
+{#                        <li><a href="#">Category 1</a></li>#}
+{#                        <li><a href="#">Category 2</a></li>#}
+{#                        <li><a href="#">Category 3</a></li>#}
+{#                    </ul>#}
+{#                </div>#}
+{#            </nav>#}
+{#        </div>#}
+{#    <div>#}
+
+
+    </div>
+
+
+{% endblock ajax %}

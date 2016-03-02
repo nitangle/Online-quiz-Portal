@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-
+    <script src="{% static 'js/main.js' %}"></script>
     {% include 'material/includes/material_css.html' %}
 
     <script src="{% static 'material/js/jquery-2.2.0.js' %}"></script>
@@ -33,7 +33,9 @@
 
 {% endblock body %}
 
+
 {% block content %}{% endblock content %}
+{% block ajax %}{% endblock ajax%}
 
 </body>
 </html>

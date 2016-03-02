@@ -14,16 +14,19 @@
 <div class="container">
     <div class="jumbotron">
         <h1>Registration<span style="font-size: large;">(will take a while only!)</span></h1>
-        <form method="POST" class="viewform">{% csrf_token %}
+        <form method="POST" class="viewform">
+            {% csrf_token %}
             {% form %}
             {% part form.Name prefix %}<i class="mdi-action-account-box prefix"></i>{% endpart %}
-            <!--{% part form.StudentNo prefix %}{% endpart %}-->
+            {% part form.StudentNo prefix %}{% endpart %}
             {% part form.Email prefix %}<i class="mdi-communication-email prefix"></i>{% endpart %}
             {% part form.Contact prefix %}<i class="mdi-communication-call prefix"></i>{% endpart %}
-            <!--{% part form.Branch label %}{% endpart %}-->
+            {% part form.Branch label %}{% endpart %}
             {% endform %}
             <button type="submit" name="_submit" class="btn btn-primary btn-lg">Submit</button>
         </form>
     </div>
 </div>
 {% endblock %}
+
+

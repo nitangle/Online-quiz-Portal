@@ -36,7 +36,7 @@ class RegistrationForm(forms.Form):
     )
 
     Branch = forms.ChoiceField(widget=forms.Select(
-        attrs={'type': 'text', 'id': 'branch', 'class': 'select-dropdown'}),
+        attrs={'type': 'text', 'id': 'branch', 'class': 'select-dropdown' , 'name':'Branch'}),
         label='Choose your branch name',
         choices=BRANCH_CHOICES, required=True
     )

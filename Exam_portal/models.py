@@ -13,16 +13,19 @@ class Student(models.Model):
         "Mention any software you worked on(photoshop etc)",
         max_length=10)  # Stage3 of registration
 
+    def __str__(self):
+        return("<Name = %s>"%self.name)
+
 
 class Category(models.Model):
-    category = models.CharField(max_length=20)
+    category = models.CharField(max_length=225)
 
     class Meta:
         verbose_name_plural = "Categories"
 
 
 class Question(models.Model):
-    question_text = models.CharField(max_length=20)
+    question_text = models.CharField(max_length=225)
     negative = models.BooleanField()
     marks = models.IntegerField()
     type = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -30,7 +33,7 @@ class Question(models.Model):
 
 class QuestionChoice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    choice = models.CharField(max_length=20)
+    choice = models.CharField(max_length=225)
 
 
 class CorrectChoice(models.Model):
@@ -40,14 +43,14 @@ class CorrectChoice(models.Model):
 
 
 class StudentAnswer(models.Model):
-    answer = models.CharField(max_length=20)
+    answer = models.CharField(max_length=225)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
 
 
 class Test(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    name = models.CharField(max_length=20)
+    name = models.CharField(max_length=225)
 
 
 '''

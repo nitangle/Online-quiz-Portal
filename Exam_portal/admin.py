@@ -3,6 +3,11 @@ from django.contrib import admin
 from .models import *
 
 
+
+
+
+
+
 class QuestionInLine(admin.TabularInline):
     model = Question
     extra = 5
@@ -19,7 +24,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 class CorrectChoiceInLine(admin.TabularInline):
     model = CorrectChoice
-    extra = 5
+    extra = 1
 
 
 class QuestionChoiceInLine(admin.TabularInline):
