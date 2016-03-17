@@ -7,10 +7,72 @@ from django.shortcuts import render, get_object_or_404, redirect, Http404
 from django.core.urlresolvers import reverse
 
 from .forms import RegistrationForm
-from .models import Student
+from .models import Student,Question,QuestionChoice,Category
 
 def show(request):
-    return render(request,'Exam_portal/ajax.html',{})
+    # Number_of_stundents = Student.objects.count()
+    # query_set = Student.objects.get(pk=1)
+    # Category1 =  Category.objects.all()
+    # print(Category1)
+    # question = Category1[0].question_set.all().order_by('id')
+    # print("hello")
+    # # print(question[0])
+    # print(len(question))
+    # print(question[0].id)
+    # question_key = []
+    # for i in range(0,len(question)):
+    #     question_key.append(question[i].id)
+    # print(question_key)
+    # print(question_key.index(2))
+    # i = question_key.index(2)
+    # print(question_key[i+1])
+    # print(question_key[i-1])
+    # print(question.get(pk=i).question_text)
+
+
+
+    category1 = Category.objects.all()
+    question = category1[0].question_set.all().order_by('id')
+    # print(question[0])
+    question_object_list = list(question)
+    # print(list(question))
+    choice = question[0].questionchoice_set.all()
+    choice_set = []
+
+    for i in range(0,len(choice)):
+        choice_set.append(choice[i].choice)
+
+    question_key =[]
+    for i in range(0,len(question_object_list)):
+        question_key.append(question_object_list[i].id)
+
+    print(question_key)
+
+    # for i in range(len(choice)):
+    #     print (choice.choice)
+    query_set = {"question":question[0].question_text,"choice":choice_set}
+
+    request.session['key_list'] = question_key
+    request.session['current'] = question[0].id
+
+    # when the first question is displayed, we first have to store its pk in a session for further submittion of the user/student answer
+    #on the ajax call function again a list of pk for the corresponding question will be generated and on next button the index of the list will be incremented for next question fetch
+
+
+
+
+    context_variable = {
+        "keys":question_key,
+        "Number":range(1,len(question)+1),
+        "instance":query_set
+    }
+
+    # request.session['current'] = question_key[0].id
+    # request.session['object_list'] = question_object_list
+    # request.session['current'] = question_object_list[0]
+
+
+    return render(request,'Exam_portal/ajax.html',context_variable)
 
 
 

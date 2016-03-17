@@ -23,6 +23,9 @@ class Category(models.Model):
     class Meta:
         verbose_name_plural = "Categories"
 
+    def __str__(self):
+        return("Category = %s"%self.category)
+
 
 class Question(models.Model):
     question_text = models.CharField(max_length=225)
@@ -30,10 +33,15 @@ class Question(models.Model):
     marks = models.IntegerField()
     type = models.ForeignKey(Category, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return ("<Question = %s>"%self.question_text)
 
 class QuestionChoice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice = models.CharField(max_length=225)
+
+    def __str__(self):
+        return("<Choice = %s?"%self.choice)
 
 
 class CorrectChoice(models.Model):
@@ -41,17 +49,24 @@ class CorrectChoice(models.Model):
                                     db_column='question_id')
     correct_choice = models.ForeignKey(QuestionChoice, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return ("<Correct chocie = %s>"%self.correct_choice)
 
 class StudentAnswer(models.Model):
     answer = models.CharField(max_length=225)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return ("<Answer = %s>"%self.answer)
+
 
 class Test(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     name = models.CharField(max_length=225)
 
+    def __str__(self):
+        return("<Test name = %s"%self.name)
 
 '''
 class Instructions(models.Model):

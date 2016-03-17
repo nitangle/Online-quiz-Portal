@@ -1,7 +1,60 @@
-
-
-
 $(document).ready(function () {
+
+
+    $('#previous').click(function(event){
+        event.preventDefault();
+        console.log("Element have been subitted for previous");
+
+        $.ajax({
+            type:"GET",
+            url:"http://127.0.0.1:8000/exam/previous/",
+            success:function(data){
+                console.log("Ajax on previous have been called");
+                console.log(data);
+                console.log(data['question']);
+                $('#1').text(data['question']);
+                $('#2').text(data['choices'][0]);
+                $('#3').text(data['choices'][1]);
+                $('#4').text(data['choices'][2]);
+                $('#5').text(data['choices'][3]);
+
+            }
+        })
+    });
+
+
+
+
+    $('#next').click(function (event) {
+        event.preventDefault();
+        console.log("Element have been submitted for next ");
+        //console.log($('#test').val());
+        //console.log($('#test2').val());
+        //console.log($('#test3').val());
+        $.ajax({
+            type: "GET",
+            url: "http://127.0.0.1:8000/exam/next/",
+            success: function (data) {
+                console.log("success");
+                console.log(data);
+                console.log(data['question']);
+                console.log(data['choices']);
+
+                //console.log(data[0]['models']);
+                $('#1').text(data['question']);
+                $('#2').text(data['choices'][0]);
+                $('#3').text(data['choices'][1]);
+                $('#4').text(data['choices'][2]);
+                $('#5').text(data['choices'][3]);
+
+
+            }
+        });
+
+    });
+
+
+
 
     // AJAX GET
     $('li').click(function () {
@@ -51,16 +104,17 @@ $(document).ready(function () {
 
 
     // AJAX POST
-    $('.add-todo').click(function () {
-        console.log('am i called');
-
+    $('.check').click(function (event) {
+        event.preventDefault();
+        console.log('post request via ajax');
+        console.log($("#test").val());
         $.ajax({
             type: "POST",
-            url: "/ajax/add/",
+            url: "/exam/postajax/",
             dataType: "json",
-            data: {"item": $(".todo-item").val()},
+            data: {"item": $("#test").val()},
             success: function (data) {
-                alert(data.message);
+                console.log("hello success ajax post request");
             }
         });
 

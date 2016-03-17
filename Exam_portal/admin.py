@@ -41,12 +41,20 @@ class QuestionAdmin(admin.ModelAdmin):
         model = Question
 
 
-# Register your models here.
 
+class StudentAdmin(admin.ModelAdmin):
+    list_display = ('id','name','branch')
+    search_fields = ['name']
+    ordering = ('id',)
+    class Meta:
+        model = Student
+
+
+# Register your models here.
 admin.site.register(QuestionChoice)
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Test)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(CorrectChoice)
-admin.site.register(Student)
+admin.site.register(Student,StudentAdmin)
 admin.site.register(StudentAnswer)
