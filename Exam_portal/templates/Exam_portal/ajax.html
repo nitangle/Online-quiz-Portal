@@ -4,48 +4,36 @@
 {% block ajax %}
     <form>
     {% csrf_token %}
-    <div class="container" xmlns="http://www.w3.org/1999/html">
+    <div class="container" style="padding-top: 3%;">
 
-    {#        <ul class="ul">#}
-    {#            <li id=1 class='click' name="ajaxdisplay">hello</li>#}
-    {#            <li id=2 class='click'>ajax</li>#}
-    {#        </ul>#}
 
     <div class="container" style="width: 100%;">
-        <nav class="navbar navbar-default">
-            <div class="container-fluid">
-                <ul class="nav navbar-nav">
 
-                    <li><a href="#">Category 1</a></li>
-                    <li><a href="#">Category 2</a></li>
-                    <li><a href="#">Category 3</a></li>
-                </ul>
-
-            </div>
-        </nav>
+        <div class="container" id="grid">
         <ul>
-        {% for num in Number %}
-            <li  class="btn-floating btn-large waves-effect waves-light red" id="id{{ num }}">{{ num }}</li>
+        {% for key in keys %}
+            <li  class="btn-floating btn-large waves-effect waves-light red" id="{{ key }}">{{ forloop.counter }}</li>
         {% endfor %}
         </ul>
-
-        <input type="text" id="test" placeholder="Name" name="name"/>
-{#        <input type="radio" name="vehicle" id="test2" value="car">A car<br>#}
-{#        <input type="radio" name="vehicle" id="test3" value="bike">A bike#}
+        </div>
 
         <ul class="collection">
 
-            <li class="collection-item" id="1">{{ instance.question }}</li>
+            <li class="collection-item" id="question" style="font-size: large;">{{ instance.question }}</li>
+            <div class="container-fluid" id="choices" style="padding:2%;">
 
-            <li class="collection-item" id="2">{{ instance.choice.0 }}</li>
-            <li class="collection-item" id="3">{{ instance.choice.1 }}</li>
-            <li class="collection-item" id="4">{{ instance.choice.2 }}</li>
-            <li class="collection-item" id="5">{{ instance.choice.3 }}</li>
+            {% for q in instance.choice %}
+                <li class="collection=item">
+                <input name="choice" type="radio" id="test{{ forloop.counter }}" value="{{ q }}"/>
+                <label style="color:black;font-style: normal;" for="test{{ forloop.counter }}" id="q{{ forloop.counter }}">{{ q }}</label></li>
+            {% endfor %}
+            </div>
         </ul>
 
         <button  class="btn" type="submit"  id="next" style="float:right">Next</button>
         <button  class="btn" type="submit" id="previous" style="float:left">Previous</button>
-        <button  class="btn check" type="submit" >check</button>
+        {{   request.session.key_list.index.current }}
+
 
 
     </div>

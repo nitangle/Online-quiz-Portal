@@ -12,6 +12,7 @@ urlpatterns = [
     url(r'^show/$',views.show,name="ajaxshow"),
     url(r'^next/$',ajax.ajaxnext, name="ajaxnext"),
     url(r'^previous/$',ajax.ajaxprevious, name="ajaxprevious"),
-    # url(r'^postajax/$',ajax.postajax, name="postajax"),
+    url(r'^postajax/$',ajax.postajax, name="postajax"),
+    url(r'^grid/$',ajax.grid,name="ajaxgrid"),
 
 ]
