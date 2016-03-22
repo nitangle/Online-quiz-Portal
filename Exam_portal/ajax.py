@@ -1,36 +1,65 @@
 from django.http import HttpResponse
 import json
 from django.core import serializers
-from .models import Student,QuestionChoice,Question,Category
+from .models import Student, QuestionChoice, Question, Category
+
 
 def grid(request):
-    if request.is_ajax() or request.method=="POST":
-        id = int(request.POST.get('id'))
-        print(type(id))
+    if request.is_ajax() or request.method == "POST":
+        id = int(request.GET.get('id'))
+        print(id)
 
-        choice,query_set = getData(id)
+        choice, query_set = getData(id,request)
 
         request.session['current'] = int(id)
 
-        return HttpResponse(json.dumps(query_set),content_type="application/json")
+        return HttpResponse(json.dumps(query_set),
+                            content_type="application/json")
     return None
 
+#  next ajax request will also submit the question answer
+#  previous will only traverse the question on the page via ajax request
+#  viewing a question again will show that it is unmarked but the grid color will indicate whether you have answered the question or not
+#  again submitting the answer will update the previuos answer
 
 
-def getData(pk):
 
+
+
+def getData(pk,request):
     question = Question.objects.get(pk=pk)
     choice = question.questionchoice_set.all()
 
-    choices = []
-    for i in range(0,len(choice)):
-        choices.append(choice[i].choice)
-    query_set = {
-        "question":question.question_text,
-        "choices":choices,
-    }
-    return choice,query_set
 
+    choices = []
+    color_key = request.session.get('current')
+
+
+    for i in range(0, len(choice)):
+        choices.append(choice[i].choice)
+
+    if request.method == "POST" and request.POST.get('answer')!= '':
+        print("True")
+        query_set = {
+            "question": question.question_text,
+            "choices": choices,
+            "color":color_key,
+        }
+    else:
+        print("Method not POST or answer not submitted")
+        query_set = {
+        "question": question.question_text,
+        "choices": choices,
+        }
+
+
+    # query_set = {
+    # "question": question.question_text,
+    # "choices": choices,
+    # }
+
+
+    return choice, query_set
 
 
 def ajaxnext(request):
@@ -42,32 +71,29 @@ def ajaxnext(request):
     :param request:
     :return:
     """
-    if request.is_ajax() or request.method == 'POST' :
+    if request.is_ajax() or request.method == 'POST':
 
         print(request.POST.get('answer'))
-
 
         current = request.session.get('current')
         key_list = request.session.get('key_list')
 
-        if(key_list.index(current)<len(key_list)):
+        if (key_list.index(current) != key_list[-2]):
             print(current)
+            print("if is true")
             next = key_list.index(current) + 1
         else:
             next = key_list.index(current)
 
         print(request.session.get('current'))
 
+        choice, query_set = getData(key_list[next],request)
 
-        choice,query_set = getData(key_list[next])
-
-
-
-        if(request.session.get('current')!=key_list[-1]):
+        if (request.session.get('current') != key_list[-1]):
             request.session['current'] = key_list[next]
 
-        return HttpResponse(json.dumps(query_set), content_type="application/json")
-
+        return HttpResponse(json.dumps(query_set),
+                            content_type="application/json")
 
 
 def ajaxprevious(request):
@@ -80,26 +106,23 @@ def ajaxprevious(request):
         current = request.session.get('current')
         key_list = request.session.get('key_list')
 
-        if(key_list.index(current)>=1):
+        if (key_list.index(current) >= 1):
             print(current)
             previous = key_list.index(current) - 1
         else:
             previous = key_list.index(current)
 
-
-        choice,query_set = getData(key_list[previous])
+        choice, query_set = getData(key_list[previous],request)
 
         print(request.session.get('current'))
 
-        if(request.session.get(current)!=key_list[0]):
+        if (request.session.get(current) != key_list[0]):
             request.session['current'] = key_list[previous]
 
-
-        return HttpResponse(json.dumps(query_set), content_type='application/json')
+        return HttpResponse(json.dumps(query_set),
+                            content_type='application/json')
 
     return None
-
-
 
 
 def postajax(request):
@@ -107,6 +130,5 @@ def postajax(request):
         data = request.POST.get("item")
 
         print (data)
-        return HttpResponse(json.dumps("['rupanshu']"),content_type="application/json")
-
-
+        return HttpResponse(json.dumps("['rupanshu']"),
+                            content_type="application/json")

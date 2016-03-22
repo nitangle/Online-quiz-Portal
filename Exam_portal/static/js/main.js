@@ -1,11 +1,16 @@
 $(document).ready(function () {
+
+
+    $('#time').text("hello");
+
+
     $('#grid').find('li').click(function(event){
         event.preventDefault();
         console.log("changing question via grid");
         id = event.target.id;
         console.log(id);
         $.ajax({
-            type:"POST",
+            type:"GET",
             datatype:'json',
             data:{'id':id},
             url:"http://127.0.0.1:8000/exam/grid/",
@@ -20,20 +25,21 @@ $(document).ready(function () {
 
     $('#previous').click(function(event){
         event.preventDefault();
+        console.log(event.target.class);
         console.log("Element have been subitted for previous");
 
-        selectedVal = null;
-
-        var selected = $("input[type='radio'][name='choice']:checked");
-        if (selected.length > 0) {
-            selectedVal = selected.val();
-            console.log(selectedVal);
-        }
+        //selectedVal = null;
+        //
+        //var selected = $("input[type='radio'][name='choice']:checked");
+        //if (selected.length > 0) {
+        //    selectedVal = selected.val();
+        //    console.log(selectedVal);
+        //}
 
         $.ajax({
-            type:"POST",
-            datatype:'json',
-            data:{'answer':selectedVal},
+            type:"GET",
+            //datatype:'json',
+            //data:{'answer':selectedVal},
             url:"http://127.0.0.1:8000/exam/previous/",
             success:function(data){
 
@@ -53,6 +59,8 @@ $(document).ready(function () {
         event.preventDefault();
         console.log("Element have been submitted for next ");
 
+
+
         selectedVal = null;
 
         var selected = $("input[type='radio'][name='choice']:checked");
@@ -61,6 +69,8 @@ $(document).ready(function () {
             selectedVal = selected.val();
             console.log(selectedVal);
         }
+
+
 
         $.ajax({
             type: "POST",
@@ -75,13 +85,20 @@ $(document).ready(function () {
                 console.log(data);
                 console.log(data['question']);
                 console.log(data['choices']);
+                console.log(data['color']);
+
+                if(data['color']){
+                    $('#'+data['color'].toString()).css("background-color",'#3CC541');
+                }
 
                 loaddata(data);
+                var color = '#3CC541';
 
 
 
 
             }
+
         });
 
     });

@@ -9,10 +9,16 @@
 
     <div class="container" style="width: 100%;">
 
-        <div class="container" id="grid">
+        <div class="container-fluid" id="grid">
+
+            <div class="chip" style="float: right;">
+                Time left :<label id="time" style="font-size: larger;"></label>
+            </div>
+
+
         <ul>
         {% for key in keys %}
-            <li  class="btn-floating btn-large waves-effect waves-light red" id="{{ key }}">{{ forloop.counter }}</li>
+            <li  class="btn-floating btn-large" style="background-color: #D5E7EA;color: #000;" id="{{ key }}">{{ forloop.counter }}</li>
         {% endfor %}
         </ul>
         </div>
@@ -30,9 +36,9 @@
             </div>
         </ul>
 
-        <button  class="btn" type="submit"  id="next" style="float:right">Next</button>
+        <button  class="btn {{ request.session.current }}" type="submit"  id="next" style="float:right">Next</button>
         <button  class="btn" type="submit" id="previous" style="float:left">Previous</button>
-        {{   request.session.key_list.index.current }}
+
 
 
 

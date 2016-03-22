@@ -67,9 +67,6 @@ def show(request):
         "instance":query_set
     }
 
-    # request.session['current'] = question_key[0].id
-    # request.session['object_list'] = question_object_list
-    # request.session['current'] = question_object_list[0]
 
 
     return render(request,'Exam_portal/ajax.html',context_variable)
@@ -106,6 +103,9 @@ def register(request):
                                           hosteler=hosteler)
             if data:
                 request.session['name'] = name
+                request.session['student_id'] = data.id
+                #same data can be used to get the corrsponding did associate with the students
+
                 return HttpResponseRedirect(reverse('Exam_portal:instruction'))
 
 
