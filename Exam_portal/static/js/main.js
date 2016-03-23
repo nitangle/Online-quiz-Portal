@@ -1,20 +1,52 @@
 $(document).ready(function () {
 
 
-    $('#time').text("hello");
+    $.ajax({
+        type: "GET",
+        datatype: 'json',
+        url:'127.0.0.1:8000/exam/timer',
+        success: function (data) {
+            var h = data['time'][0];
+            var m = data['time'][1];
+            var s = data['time'][2];
+            var now = new Date();
+            console.log(now.toString());
+            var test_time = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, s);
+            var epoch = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+            var test_duration = Math.floor(Date.parse(test_time) - Date.parse(epoch));
+            console.log(test_duration);
+            document.getElementById("demo").innerHTML = test_time;
+            var today = new Date();
+            var stop = setInterval(function () {
+                var current = new Date();
+                var diff = Math.floor(Date.parse(current) - Date.parse(today));
+                console.log(diff);
+                if (diff == test_duration) {
+                    clearInterval(stop);
+                    window.location.replace("http:127.0.0.1:8000/examend");
+                }
+                var seconds = Math.floor(diff / 1000) % 60;
+                var minutes = Math.floor(diff / 1000 / 60) % 60;
+                var hours = Math.floor(diff / 1000 / 60 / 60) % 24;
+
+                document.getElementById("test").innerHTML = hours + ':' + minutes + ':' + seconds;
+
+            }, 1000);
+        }
+    })
 
 
-    $('#grid').find('li').click(function(event){
+    $('#grid').find('li').click(function (event) {
         event.preventDefault();
         console.log("changing question via grid");
         id = event.target.id;
         console.log(id);
         $.ajax({
-            type:"GET",
-            datatype:'json',
-            data:{'id':id},
-            url:"http://127.0.0.1:8000/exam/grid/",
-            success:function(data){
+            type: "GET",
+            datatype: 'json',
+            data: {'id': id},
+            url: "http://127.0.0.1:8000/exam/grid/",
+            success: function (data) {
                 console.log("successful request");
                 loaddata(data);
             }
@@ -22,8 +54,7 @@ $(document).ready(function () {
     });
 
 
-
-    $('#previous').click(function(event){
+    $('#previous').click(function (event) {
         event.preventDefault();
         console.log(event.target.class);
         console.log("Element have been subitted for previous");
@@ -37,11 +68,11 @@ $(document).ready(function () {
         //}
 
         $.ajax({
-            type:"GET",
+            type: "GET",
             //datatype:'json',
             //data:{'answer':selectedVal},
-            url:"http://127.0.0.1:8000/exam/previous/",
-            success:function(data){
+            url: "http://127.0.0.1:8000/exam/previous/",
+            success: function (data) {
 
                 console.log("Ajax on previous have been called");
                 console.log(data);
@@ -54,11 +85,9 @@ $(document).ready(function () {
     });
 
 
-
     $('#next').click(function (event) {
         event.preventDefault();
         console.log("Element have been submitted for next ");
-
 
 
         selectedVal = null;
@@ -71,15 +100,14 @@ $(document).ready(function () {
         }
 
 
-
         $.ajax({
             type: "POST",
             url: "http://127.0.0.1:8000/exam/next/",
-            datatype:'json',
-            data:{'answer':selectedVal},
+            datatype: 'json',
+            data: {'answer': selectedVal},
             success: function (data) {
-                $('input[type="radio"]').each(function(){
-                     $(this).checked = false;
+                $('input[type="radio"]').each(function () {
+                    $(this).checked = false;
                 });
                 console.log("success");
                 console.log(data);
@@ -87,14 +115,12 @@ $(document).ready(function () {
                 console.log(data['choices']);
                 console.log(data['color']);
 
-                if(data['color']){
-                    $('#'+data['color'].toString()).css("background-color",'#3CC541');
+                if (data['color']) {
+                    $('#' + data['color'].toString()).css("background-color", '#3CC541');
                 }
 
                 loaddata(data);
                 var color = '#3CC541';
-
-
 
 
             }
@@ -104,20 +130,16 @@ $(document).ready(function () {
     });
 
 
-
-
-    function loaddata(data){
+    function loaddata(data) {
         $('#question').text(data['question']);
 
-        for(i=0;i<data['choices'].length;i++) {
-            id = '#q'+ (i+1).toString();
-            $('#test'+(i+1).toString()).attr({'value':data['choices'][i],'checked':false});
+        for (i = 0; i < data['choices'].length; i++) {
+            id = '#q' + (i + 1).toString();
+            $('#test' + (i + 1).toString()).attr({'value': data['choices'][i], 'checked': false});
             $(id).text(data['choices'][i]);
 
         }
     }
-
-
 
 
     // CSRF code

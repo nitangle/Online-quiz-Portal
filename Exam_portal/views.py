@@ -5,9 +5,22 @@ from django.shortcuts import render
 from django.http import HttpResponse,HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect, Http404
 from django.core.urlresolvers import reverse
-
+import json
 from .forms import RegistrationForm
-from .models import Student,Question,QuestionChoice,Category
+from .models import Student,Question,QuestionChoice,Category,Test
+
+
+def examend(request):
+    return render(request,'Exam_portal/examend.html')
+
+
+def timer(request):
+    time = Test.objects.get(name='Test1').time
+    hours = time.hour
+    minutes = time.minute
+    seconds = time.second
+    data={'time': [hours,minutes,seconds]}
+    return HttpResponse(json.dumps(data),content_type='application/json')
 
 def show(request):
     # Number_of_stundents = Student.objects.count()
@@ -57,9 +70,6 @@ def show(request):
 
     # when the first question is displayed, we first have to store its pk in a session for further submittion of the user/student answer
     #on the ajax call function again a list of pk for the corresponding question will be generated and on next button the index of the list will be incremented for next question fetch
-
-
-
 
     context_variable = {
         "keys":question_key,
