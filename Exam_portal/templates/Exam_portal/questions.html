@@ -1,0 +1,35 @@
+{% extends 'Exam_portal/base.html' %}
+{% block content %}
+{% csrf_token %}
+<script>
+
+</script>
+<div class="container-fluid">
+    <div class="collection">
+
+        <div href="#!" class="collection-item">Name:<span
+                class="badge">{{ name }}</span></div>
+
+    </div>
+    <div class="jumbotron">
+        <span id="categories">
+            {% for category in category_list %}
+                <span class="btn" id="{{ category }}" href="{% url 'Exam_portal:category' category_list %}">{{ category.name }}</span>
+            {% endfor %}
+        </span>
+        <div id="question-panel">
+            {{ category_list.0.question.all.first.text}}
+            <form action="#" method="POST">
+                {% for choice in category_list.0.question.all.first.choices.all %}
+                <input type="radio" name="choice " id="{{ choice.id }}" value="{{ choice.choice }}">{{ choice.choice }}
+                {% endfor %}
+            </form>
+            <a id="Prev" class="btn" href="#">Prev</a>
+            <a id="Next" class="btn" href="#">Next</a>
+        </div>
+    </div>
+
+
+</div>
+
+{% endblock content %}

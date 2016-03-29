@@ -21,6 +21,7 @@
 <body data-spy="scroll" data-target=".navbar" data-offset="50">
 
 {% block body %}
+    {% csrf_token %}
     <nav>
     <div class="nav-wrapper">
       <a href="#" class="brand-logo" style="padding-left: 3%;">SI Recruitment</a>

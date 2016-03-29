@@ -4,17 +4,19 @@
     <div class="container-fluid">
         <div class="collection">
 
-            <div href="#!" class="collection-item">Name<span
-                    class="badge">  </span></div>
+            <div href="#!" class="collection-item">Name:<span
+                    class="badge"></span></div>
 
         </div>
         <div class="jumbotron">
-            <h1>
-                This page contain the instruction of the quiz portal
-            </h1>
+            <h2>
+                Instructions for the exam
+            </h2>
         </div>
+
         <a class="btn" id="start"
            href="{% url 'Exam_portal:ajaxshow' %}">Start</a>
+
     </div>
 
 {% endblock content %}

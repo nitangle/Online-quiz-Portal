@@ -1,10 +1,14 @@
 $(document).ready(function () {
 
 
+
+    //$('#time').text("hello");
+
     $.ajax({
         type: "GET",
         datatype: 'json',
-        url:'127.0.0.1:8000/exam/timer',
+        url: 'http://127.0.0.1:8000/exam/timer',
+
         success: function (data) {
             var h = data['time'][0];
             var m = data['time'][1];
@@ -15,7 +19,6 @@ $(document).ready(function () {
             var epoch = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
             var test_duration = Math.floor(Date.parse(test_time) - Date.parse(epoch));
             console.log(test_duration);
-            document.getElementById("demo").innerHTML = test_time;
             var today = new Date();
             var stop = setInterval(function () {
                 var current = new Date();
@@ -23,17 +26,21 @@ $(document).ready(function () {
                 console.log(diff);
                 if (diff == test_duration) {
                     clearInterval(stop);
-                    window.location.replace("http:127.0.0.1:8000/examend");
+
+                    window.location.replace("http://127.0.0.1:8000/exam/end");
+
                 }
                 var seconds = Math.floor(diff / 1000) % 60;
                 var minutes = Math.floor(diff / 1000 / 60) % 60;
                 var hours = Math.floor(diff / 1000 / 60 / 60) % 24;
 
-                document.getElementById("test").innerHTML = hours + ':' + minutes + ':' + seconds;
+
+                document.getElementById("time").innerHTML = hours + ':' + minutes + ':' + seconds;
 
             }, 1000);
         }
-    })
+    });
+
 
 
     $('#grid').find('li').click(function (event) {
@@ -94,6 +101,7 @@ $(document).ready(function () {
 
         var selected = $("input[type='radio'][name='choice']:checked");
 
+
         if (selected.length > 0) {
             selectedVal = selected.val();
             console.log(selectedVal);
@@ -122,12 +130,11 @@ $(document).ready(function () {
                 loaddata(data);
                 var color = '#3CC541';
 
-
             }
-
         });
-
     });
+});
+
 
 
     function loaddata(data) {
@@ -154,27 +161,25 @@ $(document).ready(function () {
                 if (cookie.substring(0, name.length + 1) === (name + '=')) {
                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                     break;
-                }
             }
         }
-        return cookieValue;
     }
+    return cookieValue;
+}
 
-    var csrftoken = getCookie('csrftoken');
+var csrftoken = getCookie('csrftoken');
 
-    function csrfSafeMethod(method) {
-        // these HTTP methods do not require CSRF protection
-        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-    }
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
 
-    $.ajaxSetup({
-        crossDomain: false, // obviates need for sameOrigin test
-        beforeSend: function (xhr, settings) {
-            if (!csrfSafeMethod(settings.type)) {
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
-            }
+$.ajaxSetup({
+    crossDomain: false, // obviates need for sameOrigin test
+    beforeSend: function (xhr, settings) {
+        if (!csrfSafeMethod(settings.type)) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
         }
-    });
-
-
+    }
 });
+

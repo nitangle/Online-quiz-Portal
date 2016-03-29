@@ -1,7 +1,9 @@
 from django.http import HttpResponse
 import json
 from django.core import serializers
+
 from .models import Student, QuestionChoice, Question, Category
+
 
 
 def grid(request):
@@ -125,10 +127,3 @@ def ajaxprevious(request):
     return None
 
 
-def postajax(request):
-    if request.is_ajax() and request.method == "POST":
-        data = request.POST.get("item")
-
-        print (data)
-        return HttpResponse(json.dumps("['rupanshu']"),
-                            content_type="application/json")

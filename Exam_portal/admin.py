@@ -5,18 +5,15 @@ from .models import *
 
 
 
-
-
-
 class QuestionInLine(admin.TabularInline):
     model = Question
     extra = 5
 
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_editable = ['category']
-    search_fields = ['category']
-    list_display = ('id', 'category')
+    list_editable = ['name']
+    search_fields = ['name']
+    list_display = ('id', 'name')
     inlines = [QuestionInLine]
 
     class Meta:
@@ -33,10 +30,11 @@ class QuestionChoiceInLine(admin.TabularInline):
 
 
 class QuestionAdmin(admin.ModelAdmin):
-    list_editable = ['question_text', 'marks']
-    list_display = ('id', 'question_text', 'marks')
-    search_fields = ['quesiton_text']
+    list_editable = ['text', 'marks']
+    list_display = ('id', 'text', 'marks')
+    search_fields = ['text']
     inlines = [QuestionChoiceInLine,CorrectChoiceInLine]
+
     class Meta:
         model = Question
 
