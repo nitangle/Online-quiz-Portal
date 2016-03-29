@@ -53,7 +53,8 @@ class CorrectChoice(models.Model):
         return ("<Correct chocie = %s>"%self.correct_choice)
 
 class StudentAnswer(models.Model):
-    answer = models.CharField(max_length=225)
+    # answer = models.CharField(max_length=225)
+    answer = models.ForeignKey(CorrectChoice, on_delete=models.CASCADE, null=False)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
 

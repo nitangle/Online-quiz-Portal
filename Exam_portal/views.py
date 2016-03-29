@@ -10,24 +10,7 @@ from .forms import RegistrationForm
 from .models import Student,Question,QuestionChoice,Category
 
 def show(request):
-    # Number_of_stundents = Student.objects.count()
-    # query_set = Student.objects.get(pk=1)
-    # Category1 =  Category.objects.all()
-    # print(Category1)
-    # question = Category1[0].question_set.all().order_by('id')
-    # print("hello")
-    # # print(question[0])
-    # print(len(question))
-    # print(question[0].id)
-    # question_key = []
-    # for i in range(0,len(question)):
-    #     question_key.append(question[i].id)
-    # print(question_key)
-    # print(question_key.index(2))
-    # i = question_key.index(2)
-    # print(question_key[i+1])
-    # print(question_key[i-1])
-    # print(question.get(pk=i).question_text)
+
 
 
 
@@ -37,14 +20,28 @@ def show(request):
     question_object_list = list(question)
     # print(list(question))
     choice = question[0].questionchoice_set.all()
+
+    category_data = []
+    question_key = []
+    for i in range(0,len(category1)):
+        qs = category1[i].question_set.all().order_by('id')
+        for j in range(0,len(qs)):
+            question_key.append(qs[j].id)
+
+    print(question_key)
+
+
+
+
+
     choice_set = []
 
     for i in range(0,len(choice)):
         choice_set.append(choice[i].choice)
 
-    question_key =[]
-    for i in range(0,len(question_object_list)):
-        question_key.append(question_object_list[i].id)
+    # question_key =[]
+    # for i in range(0,len(question_object_list)):
+    #     question_key.append(question_object_list[i].id)
 
     print(question_key)
 

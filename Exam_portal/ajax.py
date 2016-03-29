@@ -9,13 +9,14 @@ def grid(request):
         id = int(request.GET.get('id'))
         print(id)
 
-        choice, query_set = getData(id,request)
+        choice, query_set = getData(id, request)
 
         request.session['current'] = int(id)
 
         return HttpResponse(json.dumps(query_set),
                             content_type="application/json")
     return None
+
 
 #  next ajax request will also submit the question answer
 #  previous will only traverse the question on the page via ajax request
@@ -26,32 +27,29 @@ def grid(request):
 
 
 
-def getData(pk,request):
+def getData(pk, request):
     question = Question.objects.get(pk=pk)
     choice = question.questionchoice_set.all()
-
 
     choices = []
     color_key = request.session.get('current')
 
-
     for i in range(0, len(choice)):
         choices.append(choice[i].choice)
 
-    if request.method == "POST" and request.POST.get('answer')!= '':
+    if request.method == "POST" and request.POST.get('answer') != '':
         print("True")
         query_set = {
             "question": question.question_text,
             "choices": choices,
-            "color":color_key,
+            "color": color_key,
         }
     else:
         print("Method not POST or answer not submitted")
         query_set = {
-        "question": question.question_text,
-        "choices": choices,
+            "question": question.question_text,
+            "choices": choices,
         }
-
 
     # query_set = {
     # "question": question.question_text,
@@ -87,7 +85,7 @@ def ajaxnext(request):
 
         print(request.session.get('current'))
 
-        choice, query_set = getData(key_list[next],request)
+        choice, query_set = getData(key_list[next], request)
 
         if (request.session.get('current') != key_list[-1]):
             request.session['current'] = key_list[next]
@@ -112,7 +110,7 @@ def ajaxprevious(request):
         else:
             previous = key_list.index(current)
 
-        choice, query_set = getData(key_list[previous],request)
+        choice, query_set = getData(key_list[previous], request)
 
         print(request.session.get('current'))
 
