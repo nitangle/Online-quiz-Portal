@@ -1,7 +1,42 @@
 $(document).ready(function () {
 
 
-    $('#time').text("hello");
+     $.ajax({
+        type: "GET",
+        datatype: 'json',
+        url: 'http://127.0.0.1:8000/exam/timer',
+
+        success: function (data) {
+            var h = data['time'][0];
+            var m = data['time'][1];
+            var s = data['time'][2];
+            var now = new Date();
+            console.log(now.toString());
+            var test_time = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, s);
+            var epoch = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+            var test_duration = Math.floor(Date.parse(test_time) - Date.parse(epoch));
+            console.log(test_duration);
+            var today = new Date();
+            var stop = setInterval(function () {
+                var current = new Date();
+                var diff = Math.floor(Date.parse(current) - Date.parse(today));
+                console.log(diff);
+                if (diff == test_duration) {
+                    clearInterval(stop);
+
+                    window.location.replace("http://127.0.0.1:8000/exam/end");
+
+                }
+                var seconds = Math.floor(diff / 1000) % 60;
+                var minutes = Math.floor(diff / 1000 / 60) % 60;
+                var hours = Math.floor(diff / 1000 / 60 / 60) % 24;
+
+
+                document.getElementById("time").innerHTML = hours + ':' + minutes + ':' + seconds;
+
+            }, 1000);
+        }
+    });
 
 
     $('#grid').find('li').click(function(event){

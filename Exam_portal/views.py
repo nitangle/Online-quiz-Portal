@@ -5,9 +5,27 @@ from django.shortcuts import render
 from django.http import HttpResponse,HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect, Http404
 from django.core.urlresolvers import reverse
+import json
 
 from .forms import RegistrationForm
-from .models import Student,Question,QuestionChoice,Category
+from .models import Student,Question,QuestionChoice,Category,Test
+
+
+def timer(request):
+    time = Test.objects.get(name='Test1').time
+    hours = time.hour
+    minutes = time.minute
+    seconds = time.second
+
+    data = {'time': [hours, minutes, seconds]}
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+def end(request):
+    return render(request,'Exam_portal/end.html', {})
+
+
+
 
 def show(request):
 

@@ -14,5 +14,7 @@ urlpatterns = [
     url(r'^previous/$',ajax.ajaxprevious, name="ajaxprevious"),
     url(r'^postajax/$',ajax.postajax, name="postajax"),
     url(r'^grid/$',ajax.grid,name="ajaxgrid"),
+    url(r'^timer/$', views.timer, name='timer'),
+    url(r'^end/$', views.end, name="end"),
 
 ]
