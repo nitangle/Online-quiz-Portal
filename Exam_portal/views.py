@@ -7,7 +7,7 @@ from django.shortcuts import render, get_object_or_404, redirect, Http404
 from django.core.urlresolvers import reverse
 import json
 
-from .forms import RegistrationForm
+from .forms import RegistrationForm , AdminForm
 from .models import Student,Question,QuestionChoice,Category,Test
 
 
@@ -27,6 +27,9 @@ def end(request):
 
 
 
+
+
+
 def show(request):
 
 
@@ -37,7 +40,7 @@ def show(request):
     # print(question[0])
     question_object_list = list(question)
     # print(list(question))
-    choice = question[0].questionchoice_set.all()
+    choice = question[0].questionchoice_set.all().order_by('id')
 
     category_data = []
     question_key = []
@@ -49,13 +52,15 @@ def show(request):
     print(question_key)
 
 
-
-
-
-    choice_set = []
+    choice_data = []
 
     for i in range(0,len(choice)):
-        choice_set.append(choice[i].choice)
+        data = (choice[i].choice,choice[i].id)
+        choice_data.append(data)
+
+        
+
+    print (choice_data)
 
     # question_key =[]
     # for i in range(0,len(question_object_list)):
@@ -65,7 +70,7 @@ def show(request):
 
     # for i in range(len(choice)):
     #     print (choice.choice)
-    query_set = {"question":question[0].question_text,"choice":choice_set}
+    query_set = {"question_no":question_key[0],"question":question[0].question_text,"choice_data":choice_data}
 
     request.session['key_list'] = question_key
     request.session['current'] = question[0].id
@@ -85,7 +90,6 @@ def show(request):
 
 
     return render(request,'Exam_portal/ajax.html',context_variable)
-
 
 
 def register(request):
@@ -139,3 +143,25 @@ def register(request):
 def instruction(request):
     # nothing to do here
     return render(request, "Exam_portal/instruction.html", context={})
+
+
+def admin(request):
+
+    category = Category.objects.all()
+
+    query_set = {
+        "category":category
+    }
+
+
+
+
+    form = AdminForm()
+
+    if request.method == "POST":
+        form = AdminForm(request.POST or None)
+
+        if form.is_valid():
+            print (form.cleaned_data)
+
+    return render(request,"Exam_portal/admin.html",query_set)

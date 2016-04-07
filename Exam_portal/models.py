@@ -41,7 +41,7 @@ class QuestionChoice(models.Model):
     choice = models.CharField(max_length=225)
 
     def __str__(self):
-        return("<Choice = %s?"%self.choice)
+        return("<Choice = %s>"%self.choice)
 
 
 class CorrectChoice(models.Model):
@@ -54,12 +54,19 @@ class CorrectChoice(models.Model):
 
 class StudentAnswer(models.Model):
     # answer = models.CharField(max_length=225)
-    answer = models.ForeignKey(CorrectChoice, on_delete=models.CASCADE, null=False)
+    answer = models.ForeignKey(QuestionChoice, on_delete=models.CASCADE, null=False)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
 
     def __str__(self):
         return ("<Answer = %s>"%self.answer)
+
+class MarksOfStudent(models.Model):
+    student =  models.ForeignKey(Student,on_delete=models.CASCADE)
+    marks = models.IntegerField()
+
+    def __str__(self):
+        return("Marks of student : %s".self.student.name)
 
 
 class Test(models.Model):
@@ -69,10 +76,15 @@ class Test(models.Model):
 
 
     def __str__(self):
-        return("<Test name = %s"%self.name)
+        return("<Test name = %s>"%self.name)
 
 '''
 class Instructions(models.Model):
     instructions = models.CharField()
 
 '''
+
+
+
+
+

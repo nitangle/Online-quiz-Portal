@@ -1,7 +1,9 @@
 $(document).ready(function () {
 
+    
 
-     $.ajax({
+
+    $.ajax({
         type: "GET",
         datatype: 'json',
         url: 'http://127.0.0.1:8000/exam/timer',
@@ -36,6 +38,39 @@ $(document).ready(function () {
 
             }, 1000);
         }
+    });
+
+    $('#mark').click(function(event){
+        event.preventDefault();
+        console.log(event.target.class);
+        console.log("Element have been subitted for mark");
+        selectedVal = null;
+
+        var selected = $("input[type='radio'][name='choice']:checked");
+
+        if (selected.length > 0) {
+            selectedVal = selected.val();
+            console.log(selectedVal);
+        }
+        $.ajax({
+            type:"POST",
+            url:"http://127.0.0.1:8000/exam/next/",
+            datatype:'json',
+            data:{'answer':selectedVal},
+            success: function (data) {
+                console.log("success");
+                $('input[type="radio"]').each(function(){
+                     $(this).checked = false;
+                 });
+                     if(data['color']){
+                         $('#'+data['color'].toString()).css("background-color",'#F71B1B');
+                        }
+                     loaddata(data);
+                }
+            });
+            
+        
+
     });
 
 
@@ -113,9 +148,7 @@ $(document).ready(function () {
             datatype:'json',
             data:{'answer':selectedVal},
             success: function (data) {
-                $('input[type="radio"]').each(function(){
-                     $(this).checked = false;
-                });
+                
                 console.log("success");
                 console.log(data);
                 console.log(data['question']);
@@ -125,9 +158,13 @@ $(document).ready(function () {
                 if(data['color']){
                     $('#'+data['color'].toString()).css("background-color",'#3CC541');
                 }
-
+                var color = '#3CC541';
+                $('input[type="radio"]').each(function(){
+                    $(this).checked = false;
+                    });
                 loaddata(data);
                 var color = '#3CC541';
+
 
 
 
@@ -144,12 +181,24 @@ $(document).ready(function () {
     function loaddata(data){
         $('#question').text(data['question']);
 
-        for(i=0;i<data['choices'].length;i++) {
+        console.log(data['choice_data'][0][0]);
+        console.log(data['choice_data'][0][1]);
+        console.log("hello "+data['question_no'].toString());
+        // $('#choices').text(" ")
+
+        $('span #question_no').text(data['question_no']+".");
+
+
+        for(i=0;i<data['choice_data'].length;i++) {
+            
             id = '#q'+ (i+1).toString();
-            $('#test'+(i+1).toString()).attr({'value':data['choices'][i],'checked':false});
-            $(id).text(data['choices'][i]);
+            $('#test'+(i+1).toString()).attr({'value':data['choice_data'][i][1],'checked':false});
+            $(id).text(data['choice_data'][i][0]);
+            
+            // $('#choices').append('<li class="collection=item"><input name="choice" type="radio" id="test"'+ toString(i+1)+'value="'+ toString(data['choice_data'][i][1])+'"/><label style="color:black;font-style: normal;" for="test'+toString(i+1)+'" id="q'+toString(i+1)+'">'+data['choice_data'][i][0]+'</label></li>');
 
         }
+
     }
 
 

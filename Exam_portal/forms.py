@@ -13,6 +13,13 @@ YES_OR_NO = (('y', 'yes'),
              ('n', 'no'))
 
 
+class AdminForm(forms.Form):
+  question = forms.CharField(label='Question Text',max_length=225)
+  marks = forms.IntegerField(label='marks')
+  negative = forms.BooleanField(label='have negative marking')
+  Negative_marks = forms.IntegerField(label="negative marks")
+
+
 class RegistrationForm(forms.Form):
     Name = forms.CharField(max_length=50,
                            label='Name', widget=forms.TextInput(

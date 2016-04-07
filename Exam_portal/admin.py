@@ -49,6 +49,12 @@ class StudentAdmin(admin.ModelAdmin):
     class Meta:
         model = Student
 
+class Marks(admin.ModelAdmin):
+    list_display = ('id','student','marks')
+    ordering = ('id',)
+    class Meta:
+        model = MarksOfStudent
+
 
 # Register your models here.
 admin.site.register(QuestionChoice)
@@ -58,3 +64,4 @@ admin.site.register(Category, CategoryAdmin)
 admin.site.register(CorrectChoice)
 admin.site.register(Student,StudentAdmin)
 admin.site.register(StudentAnswer)
+admin.site.register(MarksOfStudent,Marks)
