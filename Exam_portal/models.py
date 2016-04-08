@@ -24,24 +24,26 @@ class Category(models.Model):
         verbose_name_plural = "Categories"
 
     def __str__(self):
-        return("Category = %s"%self.category)
+        return "Category = %s"%self.category
 
 
 class Question(models.Model):
     question_text = models.CharField(max_length=225)
     negative = models.BooleanField()
+    negative_marks = models.IntegerField(null=True)
     marks = models.IntegerField()
     type = models.ForeignKey(Category, on_delete=models.CASCADE)
 
     def __str__(self):
-        return ("<Question = %s>"%self.question_text)
+        return "<Question = %s>"%self.question_text
+
 
 class QuestionChoice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice = models.CharField(max_length=225)
 
     def __str__(self):
-        return("<Choice = %s>"%self.choice)
+        return "<Choice = %s>"%self.choice
 
 
 class CorrectChoice(models.Model):
@@ -50,7 +52,8 @@ class CorrectChoice(models.Model):
     correct_choice = models.ForeignKey(QuestionChoice, on_delete=models.CASCADE)
 
     def __str__(self):
-        return ("<Correct chocie = %s>"%self.correct_choice)
+        return "<Correct choice = %s>"%self.correct_choice
+
 
 class StudentAnswer(models.Model):
     # answer = models.CharField(max_length=225)
@@ -59,14 +62,14 @@ class StudentAnswer(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
 
     def __str__(self):
-        return ("<Answer = %s>"%self.answer)
+        return "<Answer = %s>"%self.answer
 
 class MarksOfStudent(models.Model):
     student =  models.ForeignKey(Student,on_delete=models.CASCADE)
     marks = models.IntegerField()
 
     def __str__(self):
-        return("Marks of student : %s".self.student.name)
+        return("Marks of student : %s"%self.student.name)
 
 
 class Test(models.Model):
@@ -77,6 +80,10 @@ class Test(models.Model):
 
     def __str__(self):
         return("<Test name = %s>"%self.name)
+
+
+
+
 
 '''
 class Instructions(models.Model):

@@ -14,10 +14,10 @@ YES_OR_NO = (('y', 'yes'),
 
 
 class AdminForm(forms.Form):
-  question = forms.CharField(label='Question Text',max_length=225)
-  marks = forms.IntegerField(label='marks')
-  negative = forms.BooleanField(label='have negative marking')
-  Negative_marks = forms.IntegerField(label="negative marks")
+    question = forms.CharField(label='Question Text', max_length=225, required=True)
+    marks = forms.IntegerField(label='marks', required=True)
+    negative = forms.BooleanField(label='have negative marking', required= False)
+    negative_marks = forms.IntegerField(label="negative marks",required= False)
 
 
 class RegistrationForm(forms.Form):
@@ -25,7 +25,7 @@ class RegistrationForm(forms.Form):
                            label='Name', widget=forms.TextInput(
             attrs={'type': 'text', 'id': 'icon_prefix', 'class': 'validate',
                    'name': 'name'})
-    )
+                           )
 
     Contact = forms.IntegerField(widget=forms.NumberInput(
         attrs={'type': 'tel', 'id': 'icon_telephone', 'class': 'validate',
@@ -43,7 +43,7 @@ class RegistrationForm(forms.Form):
     )
 
     Branch = forms.ChoiceField(widget=forms.Select(
-        attrs={'type': 'text', 'id': 'branch', 'class': 'select-dropdown' , 'name':'Branch'}),
+        attrs={'type': 'text', 'id': 'branch', 'class': 'select-dropdown', 'name': 'Branch'}),
         label='Choose your branch name',
         choices=BRANCH_CHOICES, required=True
     )

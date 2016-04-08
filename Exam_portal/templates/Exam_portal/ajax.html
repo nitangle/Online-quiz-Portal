@@ -7,6 +7,7 @@
     <div class="container" style="padding-top: 3%;">
 
 
+    <input type="radio" id="timeStarter" style="display: none;" name="timeStarter" checked="checked" value="true">
     <div class="container" style="width: 100%;">
 
 
@@ -31,7 +32,7 @@
 
             {% for choice,id in instance.choice_data %}
 
-                <li class="collection=item">
+                <li class="collection=item" id="{{ id }}">
                 <input name="choice" type="radio" id="test{{ forloop.counter }}" value="{{ id }}"/>
                 <label style="color:black;font-style: normal;" for="test{{ forloop.counter }}" id="q{{ forloop.counter }}">{{ choice }}</label>
                 </li>

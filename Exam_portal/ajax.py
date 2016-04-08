@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 import json
 from django.core import serializers
-from .models import Student, QuestionChoice, Question, Category,StudentAnswer,CorrectChoice
+from .models import Student, QuestionChoice, Question, Category,StudentAnswer,CorrectChoice,MarksOfStudent
 from django.core.exceptions import ObjectDoesNotExist
 
 def grid(request):
@@ -30,8 +30,14 @@ def markCalculate(request):
         student_answer = StudentAnswer.objects.get(student=student,question = question)
         if (student_answer.answer == correct_choice.correct_choice):
             marks = marks + question.marks
+        elif(question.negative == True and student_answer.answer != correct_choice.correct_choice):
+            marks = marks - question.negative_marks
+    print("marks")
+    print(marks)
 
-    marks_of_student = MarksOfStudent.objects.create(student = studnet,marks =  marks)
+    marks_of_student,flag = MarksOfStudent.objects.get_or_create(student = Student.objects.get(pk=int(student)) , defaults={'marks':0})
+    marks_of_student.marks = marks
+    marks_of_student.save()
 
     return None
 
@@ -90,11 +96,22 @@ def getData(pk, request):
     choice_data = []
     color_key = request.session.get('current')
 
+    student = Student.objects.get(pk=int(request.session.get('student_id')))
+
+    try:
+        radio_checked = StudentAnswer.objects.get(student=student,question=question)
+        radio_checked_key = radio_checked.answer.id
+        print("Request for selecting the radio button")
+        print(radio_checked_key)
+    except ObjectDoesNotExist:
+        pass
+        radio_checked_key = None
+
     
 
     # print("question_no {}".format(request.session.get('key_list').index(color_key)+1))
     # print("Question :{}".format())
-    question_no = request.session.get('key_list').index(color_key) + 1
+    question_no = request.session.get('key_list').index(pk) + 1
 
     for i in range(0, len(choice)):
         data = (choice[i].choice,choice[i].id)
@@ -107,6 +124,7 @@ def getData(pk, request):
             "question": question.question_text,
             "choice_data": choice_data,
             "color": color_key,
+            "radio_checked_key":radio_checked_key,
         }
     else:
         print("Method not POST or answer not submitted")
@@ -114,6 +132,7 @@ def getData(pk, request):
             "question_no":question_no,
             "question": question.question_text,
             "choice_data": choice_data ,
+            "radio_checked_key": radio_checked_key,
         }
 
 
@@ -136,6 +155,7 @@ def ajaxnext(request):
     :param request:
     :return:
     """
+
     if request.is_ajax() or request.method == 'POST':
 
         if(request.POST.get('answer')!=''):
@@ -146,15 +166,22 @@ def ajaxnext(request):
         current = request.session.get('current')
         key_list = request.session.get('key_list')
 
-        if (key_list.index(current) != key_list[-2]):
+        print(key_list.index(current))
+        print("before if "+str(current))
+        # if (key_list.index(current) != key_list[-2]):
+        if (key_list.index(current) != len(key_list)-1):
+
             print(current)
             print("if is true")
             next = key_list.index(current) + 1
-
         else:
             next = key_list.index(current)
+        
 
+        print("current"),
         print(request.session.get('current'))
+        print("index "+str(next))
+        print(key_list[next])
 
 
         choice, query_set = getData(key_list[next], request)

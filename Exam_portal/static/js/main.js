@@ -1,44 +1,98 @@
 $(document).ready(function () {
 
+    // $("input").prop('required',true);
+
+
     
+    console.log(true);
+    var entry = 1;
+    $('#new_category').click(function(event){
+        event.preventDefault();
 
+        if($('#category_list').val()=='' && entry==1){
+            $('.category').append("<input type='text' name='new_category' placeholder='Name of new category' required/>");
+            entry = 0;
 
-    $.ajax({
-        type: "GET",
-        datatype: 'json',
-        url: 'http://127.0.0.1:8000/exam/timer',
-
-        success: function (data) {
-            var h = data['time'][0];
-            var m = data['time'][1];
-            var s = data['time'][2];
-            var now = new Date();
-            console.log(now.toString());
-            var test_time = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, s);
-            var epoch = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
-            var test_duration = Math.floor(Date.parse(test_time) - Date.parse(epoch));
-            console.log(test_duration);
-            var today = new Date();
-            var stop = setInterval(function () {
-                var current = new Date();
-                var diff = Math.floor(Date.parse(current) - Date.parse(today));
-                console.log(diff);
-                if (diff == test_duration) {
-                    clearInterval(stop);
-
-                    window.location.replace("http://127.0.0.1:8000/exam/end");
-
-                }
-                var seconds = Math.floor(diff / 1000) % 60;
-                var minutes = Math.floor(diff / 1000 / 60) % 60;
-                var hours = Math.floor(diff / 1000 / 60 / 60) % 24;
-
-
-                document.getElementById("time").innerHTML = hours + ':' + minutes + ':' + seconds;
-
-            }, 1000);
+            
         }
     });
+
+
+
+
+
+    //Above Code is for admin panel
+
+
+
+    //code for preventing right-click refresh so that the jquery timer wont be refereshed
+    $(document).mousedown(function(e) {
+        if( e.button == 2 ) {
+            e.preventDefault();
+            return false;
+        } else {
+            return true;
+        }
+    });
+    document.onmousedown=disableclick;
+    status="Right Click Disabled";
+    function disableclick(event)
+    {
+    if(event.button==2)
+    {
+    // alert(status);
+    return false;    
+    }
+    }
+    function disableF5(e) { if ((e.which || e.keyCode) == 116) e.preventDefault(); };
+
+    //-----------------------------------------------------------------------------------
+
+    var flagVal = "";
+    var flag = $("input[type='radio'][name='timeStarter']:checked");
+    if (flag.length > 0) {
+    flagVal = flag.val();
+    }
+
+
+    if (flagVal== 'true'){
+        $.ajax({
+            type: "GET",
+            datatype: 'json',
+            url: 'http://127.0.0.1:8000/exam/timer',
+
+            success: function (data) {
+                var h = data['time'][0];
+                var m = data['time'][1];
+                var s = data['time'][2];
+                var now = new Date();
+                console.log(now.toString());
+                var test_time = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, s);
+                var epoch = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+                var test_duration = Math.floor(Date.parse(test_time) - Date.parse(epoch));
+                console.log(test_duration);
+                var today = new Date();
+                var stop = setInterval(function () {
+                    var current = new Date();
+                    var diff = Math.floor(Date.parse(current) - Date.parse(today));
+                    console.log(diff);
+                    if (diff == test_duration) {
+                        clearInterval(stop);
+
+                        window.location.replace("http://127.0.0.1:8000/exam/end");
+
+                    }
+                    var seconds = Math.floor(diff / 1000) % 60;
+                    var minutes = Math.floor(diff / 1000 / 60) % 60;
+                    var hours = Math.floor(diff / 1000 / 60 / 60) % 24;
+
+
+                    document.getElementById("time").innerHTML = hours + ':' + minutes + ':' + seconds;
+
+                }, 1000);
+            }
+        });
+    }
 
     $('#mark').click(function(event){
         event.preventDefault();
@@ -179,12 +233,23 @@ $(document).ready(function () {
 
 
     function loaddata(data){
-        $('#question').text(data['question']);
+        $('#question').text(data['question_no']+". "+data['question']);
 
         console.log(data['choice_data'][0][0]);
         console.log(data['choice_data'][0][1]);
         console.log("hello "+data['question_no'].toString());
         // $('#choices').text(" ")
+
+        console.log(data['radio_checked_key']);
+
+
+        if(data['radio_checked_key']){
+
+            var check = $('li').find(data['radio_checked_key'].toString());
+            // check.checked = checked;
+            console.log(check);
+
+        }
 
         $('span #question_no').text(data['question_no']+".");
 

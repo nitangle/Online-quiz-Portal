@@ -2,13 +2,15 @@ from django.shortcuts import render
 
 # Create your views here.
 
-from django.http import HttpResponse,HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect, Http404
 from django.core.urlresolvers import reverse
 import json
+from django.core.exceptions import ObjectDoesNotExist
 
-from .forms import RegistrationForm , AdminForm
-from .models import Student,Question,QuestionChoice,Category,Test
+from .forms import RegistrationForm, AdminForm
+from .models import Student, Question, QuestionChoice, Category, Test
+from .ajax import markCalculate
 
 
 def timer(request):
@@ -18,23 +20,18 @@ def timer(request):
     seconds = time.second
 
     data = {'time': [hours, minutes, seconds]}
+
     return HttpResponse(json.dumps(data), content_type='application/json')
+    return HttpResponse("hello")
 
 
 def end(request):
-    return render(request,'Exam_portal/end.html', {})
+    markCalculate(request)
 
-
-
-
-
+    return render(request, 'Exam_portal/end.html', {})
 
 
 def show(request):
-
-
-
-
     category1 = Category.objects.all()
     question = category1[0].question_set.all().order_by('id')
     # print(question[0])
@@ -44,21 +41,18 @@ def show(request):
 
     category_data = []
     question_key = []
-    for i in range(0,len(category1)):
+    for i in range(0, len(category1)):
         qs = category1[i].question_set.all().order_by('id')
-        for j in range(0,len(qs)):
+        for j in range(0, len(qs)):
             question_key.append(qs[j].id)
 
     print(question_key)
 
-
     choice_data = []
 
-    for i in range(0,len(choice)):
-        data = (choice[i].choice,choice[i].id)
+    for i in range(0, len(choice)):
+        data = (choice[i].choice, choice[i].id)
         choice_data.append(data)
-
-        
 
     print (choice_data)
 
@@ -70,26 +64,24 @@ def show(request):
 
     # for i in range(len(choice)):
     #     print (choice.choice)
-    query_set = {"question_no":question_key[0],"question":question[0].question_text,"choice_data":choice_data}
+    query_set = {"question_no": "1", "question": question[0].question_text, "choice_data": choice_data}
 
     request.session['key_list'] = question_key
     request.session['current'] = question[0].id
 
     # when the first question is displayed, we first have to store its pk in a session for further submittion of the user/student answer
-    #on the ajax call function again a list of pk for the corresponding question will be generated and on next button the index of the list will be incremented for next question fetch
+    # on the ajax call function again a list of pk for the corresponding question will be generated and on next button the index of the list will be incremented for next question fetch
 
 
 
 
     context_variable = {
-        "keys":question_key,
-        "Number":range(1,len(question)+1),
-        "instance":query_set
+        "keys": question_key,
+        "Number": range(1, len(question) + 1),
+        "instance": query_set
     }
 
-
-
-    return render(request,'Exam_portal/ajax.html',context_variable)
+    return render(request, 'Exam_portal/ajax.html', context_variable)
 
 
 def register(request):
@@ -123,10 +115,9 @@ def register(request):
             if data:
                 request.session['name'] = name
                 request.session['student_id'] = data.id
-                #same data can be used to get the corrsponding did associate with the students
+                # same data can be used to get the corrsponding did associate with the students
 
                 return HttpResponseRedirect(reverse('Exam_portal:instruction'))
-
 
         print(form.cleaned_data)
 
@@ -135,7 +126,6 @@ def register(request):
         'title': 'SI recruitment',
         'form': form,
     }
-
 
     return render(request, 'Exam_portal/register.html', context)
 
@@ -146,22 +136,87 @@ def instruction(request):
 
 
 def admin(request):
-
     category = Category.objects.all()
-
-    query_set = {
-        "category":category
-    }
-
-
-
-
-    form = AdminForm()
 
     if request.method == "POST":
         form = AdminForm(request.POST or None)
 
         if form.is_valid():
+            choice_selector = "choice"
+            choice = []
+
+            for i in range(1, 5):
+                choice.append(request.POST.get(choice_selector + str(i)))
+
+            if request.POST.get('category') != '':
+                category = request.POST.get('category')
+            else:
+                category = request.POST.get('new_category')
+
+            correct_choice = request.POST.get('correct_choice')
+
+            print(choice)
+            print(category)
+            print(correct_choice)
             print (form.cleaned_data)
 
-    return render(request,"Exam_portal/admin.html",query_set)
+            question_data = {
+                "choice": choice,
+                "category": category,
+                "correct_choice": correct_choice,
+                "form_data": form.cleaned_data,
+            }
+
+            update_question(question_data)
+
+            print(type(request.POST.get('correct_choice')))
+            return HttpResponseRedirect(reverse('Exam_portal:admin'))
+            # print (request.POST.get('choice1'))
+            # print(request.POST.get('new_category'))
+
+    else:
+        form = AdminForm()
+
+    query_set = {
+        "category": category,
+        "form": form,
+    }
+
+    # print (query_set)
+
+    return render(request, "Exam_portal/admin.html", query_set)
+
+
+def update_question(question_data):
+    print(question_data)
+    print(question_data['category'])
+
+    print(question_data['form_data']['question'])
+
+    if question_data['form_data']['negative_marks'] is None:
+        negative_marks=0
+    else:
+        negative_marks=question_data['form_data']['negative_marks']
+
+    print(negative_marks)
+    try:
+        category = Category.objects.get(category=question_data['category'])
+    except ObjectDoesNotExist:
+        category = Category.objects.create(category=question_data['category'])
+
+    question = category.question_set.create(question_text=question_data['form_data']['question'],
+                                            negative=question_data['form_data']['negative'],
+                                            negative_marks=negative_marks,
+                                            marks=question_data['form_data']['marks'])
+
+    choice = question.questionchoice_set
+
+    correct_choice = question.correctchoice_set
+    choice_data = question_data['choice']
+    for i in range(len(choice_data)):
+        choice.create(choice=choice_data[i])
+        print (choice_data[i])
+
+    correct_choice.create(correct_choice = choice.get(choice=choice_data[int(question_data['correct_choice'])- 1]))
+
+    return True
