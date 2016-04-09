@@ -39,14 +39,18 @@ def show(request):
     # print(list(question))
     choice = question[0].questionchoice_set.all().order_by('id')
 
-    category_data = []
+    category_first_data = []
     question_key = []
     for i in range(0, len(category1)):
         qs = category1[i].question_set.all().order_by('id')
+        data = (qs[0].id, category1[i].category)
+        category_first_data.append(data)
         for j in range(0, len(qs)):
             question_key.append(qs[j].id)
 
+    print(category_first_data)
     print(question_key)
+    # print(data)
 
     choice_data = []
 
@@ -64,7 +68,12 @@ def show(request):
 
     # for i in range(len(choice)):
     #     print (choice.choice)
-    query_set = {"question_no": "1", "question": question[0].question_text, "choice_data": choice_data}
+    query_set = {
+        "question_no": "1",
+        "question": question[0].question_text,
+        "choice_data": choice_data,
+        "category":category_first_data
+    }
 
     request.session['key_list'] = question_key
     request.session['current'] = question[0].id
@@ -87,8 +96,8 @@ def show(request):
 def register(request):
     form = RegistrationForm()
 
-    # if request.session.get('name'):
-    #     return redirect(reverse('Exam_portal:instruction'))
+    if request.session.get('name'):
+        return redirect(reverse('Exam_portal:instruction'))
 
     if request.method == "POST":
         form = RegistrationForm(request.POST or None)
@@ -115,7 +124,7 @@ def register(request):
             if data:
                 request.session['name'] = name
                 request.session['student_id'] = data.id
-                # same data can be used to get the corrsponding did associate with the students
+                # same data can be used to get the corresponding did associate with the students
 
                 return HttpResponseRedirect(reverse('Exam_portal:instruction'))
 
@@ -194,9 +203,9 @@ def update_question(question_data):
     print(question_data['form_data']['question'])
 
     if question_data['form_data']['negative_marks'] is None:
-        negative_marks=0
+        negative_marks = 0
     else:
-        negative_marks=question_data['form_data']['negative_marks']
+        negative_marks = question_data['form_data']['negative_marks']
 
     print(negative_marks)
     try:
@@ -217,6 +226,6 @@ def update_question(question_data):
         choice.create(choice=choice_data[i])
         print (choice_data[i])
 
-    correct_choice.create(correct_choice = choice.get(choice=choice_data[int(question_data['correct_choice'])- 1]))
+    correct_choice.create(correct_choice=choice.get(choice=choice_data[int(question_data['correct_choice']) - 1]))
 
     return True

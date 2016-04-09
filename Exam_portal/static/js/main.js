@@ -17,6 +17,22 @@ $(document).ready(function () {
         }
     });
 
+    $('#category').click(function(e){
+        e.preventDefault();
+        var category_id = e.target.id;
+        $.ajax({
+            type:"GET",
+            datatype:"JSON",
+            data:{'id':category_id},
+            url:"http://127.0.0.1:8000/exam/grid/",
+            success:function (data) {
+                loaddata(data);
+
+            }
+
+        });
+
+    });
 
 
 

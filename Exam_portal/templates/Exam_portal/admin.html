@@ -20,7 +20,7 @@
 	<div  class="container">
 	<form method="POST" class="viewform" action={% url 'Exam_portal:admin' %}>
 		{% csrf_token %}
-
+        <div class="from-group">
 
 
 
@@ -28,33 +28,38 @@
 			<select name="category" id="category_list" >
 			<option selected="selected" ></option>
 			{% for i in category %}
-			
+
 			<option value="{{ i.category }}">{{ i.category }}</option>
-			</select>
+
 			{% endfor %}
+            </select>
 		</div>
 		<div>--OR--</div><br>
 		<button class="btn" id="new_category">New Category</button>
 
 		<div class="question_section">
+            <div class="jumbotron">
 			{{ form.question.label }} {{ form.question }}
-				<div id="choice_section" class="container-fluid">
+			</div>
+					<div id="choice_section" class="container-fluid">
 					<input type="text" name='choice1' placeHolder="Option1" required><span><input type='radio' name='correct_choice' value="1" required/></span><br>
 					<input type="text" name='choice2' placeHolder="Option2" required><span><input type='radio' name='correct_choice' value="2" required/></span><br>
 					<input type="text" name='choice3' placeHolder="Option3" required><span><input type='radio' name='correct_choice' value="3" required/></span><br>
 					<input type="text" name='choice4' placeHolder="Option4" required><span><input type='radio' name='correct_choice' value="4" required/></span><br>
 				</div>
 			{{ form.marks.label }} {{ form.marks }}<br>
-			{{ form.negative.label }} {{form.negative }}<br>
+			{{ form.negative.label }} {{form.negative }}
             <div id="negative_marks">
 			{{ form.negative_marks.label }} {{ form.negative_marks }}<br>
             </div>
 		</div>
 
+        <label for="time"><input type="text" name="time" placeholder="format = hh:mm:ss"/></label>
+
 		<div class="button_group">
 			<button  type="submit" class="btn" >Add another</button> <button class="btn"> Finish</button>
-		<div>
-
+		</div>
+        </div>
 	<form>
 	</div>
 </body>

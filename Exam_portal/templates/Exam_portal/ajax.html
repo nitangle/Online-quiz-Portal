@@ -11,8 +11,9 @@
     <div class="container" style="width: 100%;">
 
 
-        <div class="chip" style="float: right;">
+        <div class="chip " style="float: right;">
             Time left :<label id="time" style="font-size: larger;"></label>
+
         </div>
 
         <div class="container-fluid" id="grid">
@@ -24,8 +25,19 @@
                         </ul>
                      </div>
         </div>
+        <div class="col-sm-8 container" style="float:right;" id="category">
+                <ul>
+                    {% for category_question_id,category in instance.category %}
+                        <li style="display: inline;padding: 2%;" id="{{ category_question_id }}">{{ category }}</li>
+                    {% endfor %}
+                </ul>
+        </div>
+
+
         <div class="col-sm-8" style="float:right;">    
         <ul class="collection">
+
+
 
             <li class="collection-item" id="question" style="font-size:large;"><span id ="question_no">{{ instance.question_no }}. </span>{{ instance.question }}</li>
             <div class="container-fluid" id="choices" style="padding:2%;">
@@ -33,7 +45,7 @@
             {% for choice,id in instance.choice_data %}
 
                 <li class="collection=item" id="{{ id }}">
-                <input name="choice" type="radio" id="test{{ forloop.counter }}" value="{{ id }}"/>
+                <input name="choice" type="radio" id="test{{ forloop.counter }}" value="{{ id }}" />
                 <label style="color:black;font-style: normal;" for="test{{ forloop.counter }}" id="q{{ forloop.counter }}">{{ choice }}</label>
                 </li>
 
