@@ -1,0 +1,135 @@
+{% extends "Exam_portal/admin.html" %}
+
+
+{% block admin %}
+<script>
+
+    document.load(function(e){
+        $("#id_question").attr("value","");
+        $("#id_marks").attr("value","");
+        $("#id_negative").prop("checked",false);
+        $("#id_negative_marks").attr("value","");
+    });
+</script>
+
+
+
+
+
+
+
+
+    <div class="container-fluid" style="width: 60% ;margin-bottom: 2%;font-size: larger;">
+        On this page you can add Question to the SI Recruitment. You can add a category or add to the existing category
+        you have to add 4 choices and net to each choice you can correct which chocie is correct
+
+         {% if display %}
+         <a class="btn btn-primary" href="../admin">Add Question</a>
+         {% else %}
+            <a class="btn btn-primary" href="../edit">Edit question</a>
+        {% endif %}
+    </div>
+    {% if display %}
+        <input type="radio" id="admin_page_request" style="display: none;" name="timeStarter" checked="checked"
+               value="true">
+    {% endif %}
+
+    <div class="container">
+
+        {% if display %}
+            <span> Below are the questions present in Database in chronological order :-</span>
+            <div style="padding:1.4%;">
+                {% if display %}
+                    <div class="container">Select the question which you want to edit</div>
+                {% endif %}
+
+                <ul>
+                    <span><li style="list-style: none;">Question =></li></span>
+                    {% for number,key in Number %}
+                        <span class="badge"><li class="btn-floating btn-large" value="{{ number }}"
+                                                style="font-size:x-large;padding: 4%;margin: 2px;list-style:none;s"
+                                                id="{{ key }}">{{ number }}</li></span>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+
+
+
+        <form method="POST" class="viewform" {% comment %}action={% url 'Exam_portal:admin' %}{% endcomment %}>
+            {% csrf_token %}
+            {#        <div name="current"  value="3"></div>#}
+            {#        {{ question }}#}
+            <div class="from-group">
+
+
+                {% if display_not %}
+                    <div class="category">
+                        <select name="category" id="category_list">
+                            <option selected="selected">Select a category</option>
+                            {% for i in category %}
+
+                                <option value="{{ i.category }}" id="{{ i.id }}">{{ i.category }}</option>
+
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>--OR--</div>
+                    <br>
+                    <button class="btn" id="new_category">New Category</button>
+                {% endif %}
+                <div class="question_section">
+
+                    <div id="question">
+                        <input type="text" name="current" style="display: none" value="{{ question.id }}"/>
+                        <label>Q1. </label> {{ form.question.label }} {{ form.question }}
+                    </div>
+                    <div id="choice_section" class="container">
+                    <span><input type="text" name='choice1' id="choice1" placeHolder="Option1" required><input
+                            type='radio'
+                            name='correct_choice'
+                            value="1"
+                            id="1"
+                            required/></span><br>
+                    <span><input type="text" name='choice2' id="choice2" placeHolder="Option2" required><input
+                            type='radio'
+                            name='correct_choice'
+                            value="2"
+                            required/></span><br>
+                    <span><input type="text" name='choice3' id="choice3" placeHolder="Option3" required><input
+                            type='radio'
+                            name='correct_choice'
+                            value="3"
+                            required/></span><br>
+                    <span><input type="text" name='choice4' id="choice4" placeHolder="Option4" required><input
+                            type='radio'
+                            name='correct_choice'
+                            value="4"
+                            required/></span><br>
+                    </div>
+                    <div id="optional">
+                        <label id="id_marks">{{ form.marks.label }}</label> {{ form.marks }}<br>
+                        <label id="id_negative">{{ form.negative.label }}</label> {{ form.negative }}<br>
+
+                        <label id="id_negative_marks"> {{ form.negative_marks.label }}</label> {{ form.negative_marks }}<br>
+                    </div>
+                </div>
+                {#        <div>If wanna change the time of the exam {{ time.name }}. Fill the following field <label style="background-color:lightgray;">Current time :{{ test.time }}</label></div>#}
+                {#        <label for="time">New time :<input type="text" name="time" placeholder="format = hh:mm:ss"/></label>#}
+                <div class="button_group" style="margin: 2%;">
+                    <button type="submit"    class="btn btn-primary">{% if display %}Update{% else %}Add
+                        Another{% endif %}</button>
+                    <a class="btn btn-primary" onclick="window.location.href='../endadmin'"> Finish</a>
+                    {% if display %}
+
+                        <button class="btn btn-danger" id="delete" style="float: right; background-color: lightcoral;">
+                            Delete
+                        </button>
+                    {% endif %}<br>
+                    <div class="btn btn-link">Clicking on " Finish " won't save your data</div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

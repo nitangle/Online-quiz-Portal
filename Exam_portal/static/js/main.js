@@ -1,31 +1,151 @@
+
+    // e.preventDefault();
+    // var id = $('body > div.container > form > div:nth-child(2)').val();
+    // console.log(id);
+    // $.ajax({
+    //     type: "GET",
+    //     datatype: 'json',
+    //     data: {'id': id},
+    //     url: "http://127.0.0.1:8000/exam/update_question/",
+    // });
+
+
 $(document).ready(function () {
 
-    // $("input").prop('required',true);
 
 
-    
-    console.log(true);
+
+
+
+    $('#delete').click(function(e){
+        e.preventDefault();
+        var deleting_id = $('#question > input[type="text"]:nth-child(1)').val();
+        if(window.confirm("Really want to delete that  question!")){
+            $.ajax({
+                type: "GET",
+                datatype: 'json',
+                data: {'id': deleting_id},
+                url: "http://127.0.0.1:8000/exam/delete/",
+                success: function (status) {
+                    console.log(status);
+                    window.location.href = "../edit";
+
+                }
+            });
+        }else {
+            console.log("stupid admin");
+        }
+
+    });
+
+
+
+
+
+
+
+
+
+    // var id_first = $('body > div.container > div > ul > span:nth-child(1) > li').attr('id');
+    // // console.log(id_first);
+    //
+    // var entry_flag = $("#admin_page_request").val();
+    //
+    // if(entry_flag){
+    //
+    //
+    //     $.ajax({
+    //         type: "GET",
+    //         datatype: 'json',
+    //         data: {'id': id_first},
+    //         url: "http://127.0.0.1:8000/exam/update_question/",
+    //         success: function (data) {
+    //             // console.log("successful request");
+    //             // console.log(data);
+    //             // console.log(data['question']);
+    //             // console.log(data['question_id']);
+    //             // console.log(data['choice']);
+    //             // console.log(data['negative']);
+    //             // console.log(data['negative_marks']);
+    //             // console.log(data['category']);
+    //
+    //             question_update(data);
+    //             // $('#id_question').attr("value","Rupanshu");
+    //
+    //
+    //             // checkmarked(data['radio_checked_key']);
+    //         }
+    //     });
+    //
+    //
+    //     entry_flag = false;
+    // }
+
+
+
+
+
+
+
+    function question_update(data){
+
+        $('#id_question').attr("value",data['question']);
+        for(i=0;i<data['choice'].length;i++) {
+            choice_id = "#choice" + (i + 1).toString();
+            $(choice_id).attr("value", data['choice'][i][0]);
+        }
+            $('input[type="number"][name="marks"]').attr("value",data['marks']);
+            if(data['negative_marks']!=""||data['negative_marks']!=0) {
+
+                $('input[type="checkbox"][name="negative"]').prop("checked", "checked");
+                $('input[type="number"][name="negative_marks"]').attr("value", data['negative_marks']);
+                console.log("executing true");
+            }
+            else{
+                console.log(data['negative_marks']);
+                $('input[type="number"][name="negative_marks"]').attr("value","");
+                $('input[type="checkbox"][name="negative"]').removeAttr("checked");
+                console.log("executing false");
+
+            }
+            console.log(data['correct_checked']);
+
+            $('#question > input[type="text"]:nth-child(1)').attr("value",data['question_id']);
+            var checked_string = "input[type='radio'][value="+data['correct_checked']+"]";
+            // console.log((checked_string));
+            $(checked_string).prop("checked",true);
+
+    //
+    }
+
+
+
+
+
+
+
+    // console.log(true);
     var entry = 1;
-    $('#new_category').click(function(event){
+    $('#new_category').click(function (event) {
         event.preventDefault();
 
-        if($('#category_list').val()=='' && entry==1){
+        if ($('#category_list').val() == '' && entry == 1) {
             $('.category').append("<input type='text' name='new_category' placeholder='Name of new category' required/>");
             entry = 0;
 
-            
+
         }
     });
 
-    $('#category').click(function(e){
+    $('#category').click(function (e) {
         e.preventDefault();
         var category_id = e.target.id;
         $.ajax({
-            type:"GET",
-            datatype:"JSON",
-            data:{'id':category_id},
-            url:"http://127.0.0.1:8000/exam/grid/",
-            success:function (data) {
+            type: "GET",
+            datatype: "JSON",
+            data: {'id': category_id},
+            url: "http://127.0.0.1:8000/exam/grid/",
+            success: function (data) {
                 loaddata(data);
 
             }
@@ -35,43 +155,46 @@ $(document).ready(function () {
     });
 
 
-
-
     //Above Code is for admin panel
 
 
-
     //code for preventing right-click refresh so that the jquery timer wont be refereshed
-    $(document).mousedown(function(e) {
-        if( e.button == 2 ) {
+    $(document).mousedown(function (e) {
+        if (e.button == 2) {
             e.preventDefault();
             return false;
         } else {
             return true;
         }
     });
-    document.onmousedown=disableclick;
-    status="Right Click Disabled";
-    function disableclick(event)
-    {
-    if(event.button==2)
-    {
-    // alert(status);
-    return false;    
+    // $(this).bind("contextmenu", function (e) {
+    //     return false;
+    // });
+    document.onmousedown = disableclick;
+    status = "Right Click Disabled";
+    function disableclick(event) {
+        if (event.button == 2) {
+            event.preventDefault();
+            // alert(status);
+
+            return false;
+        }
     }
-    }
-    function disableF5(e) { if ((e.which || e.keyCode) == 116) e.preventDefault(); };
+
+    function disableF5(e) {
+        if ((e.which || e.keyCode) == 116) e.preventDefault();
+    };
 
     //-----------------------------------------------------------------------------------
 
     var flagVal = "";
-    var flag = $("input[type='radio'][name='timeStarter']:checked");
+    var flag = $("#timeStarter");
     if (flag.length > 0) {
-    flagVal = flag.val();
+        flagVal = flag.val();
     }
 
 
-    if (flagVal== 'true'){
+    if (flagVal == 'true') {
         $.ajax({
             type: "GET",
             datatype: 'json',
@@ -85,22 +208,31 @@ $(document).ready(function () {
                 console.log(now.toString());
                 var test_time = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, s);
                 var epoch = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
-                var test_duration = Math.floor(Date.parse(test_time) - Date.parse(epoch));
+                var test_duration = Math.floor((Date.parse(test_time) - Date.parse(epoch)) / 1000);
                 console.log(test_duration);
                 var today = new Date();
                 var stop = setInterval(function () {
                     var current = new Date();
-                    var diff = Math.floor(Date.parse(current) - Date.parse(today));
+                    var diff = Math.floor((Date.parse(current) - Date.parse(today)) / 1000);
                     console.log(diff);
+                    var before_alert = 10;
+                    if (diff == test_duration - before_alert) {
+                        // alert("about to end");
+
+                    $('#error_message').css("display","block");
+
+                        // $('#chip').css({"border": "solid 4px red", "padding": "2px"});
+                    }
+
                     if (diff == test_duration) {
                         clearInterval(stop);
 
                         window.location.replace("http://127.0.0.1:8000/exam/end");
 
                     }
-                    var seconds = Math.floor(diff / 1000) % 60;
-                    var minutes = Math.floor(diff / 1000 / 60) % 60;
-                    var hours = Math.floor(diff / 1000 / 60 / 60) % 24;
+                    var seconds = diff % 60;
+                    var minutes = Math.floor(diff / 60) % 60;
+                    var hours = Math.floor(diff / 60 / 60) % 24;
 
 
                     document.getElementById("time").innerHTML = hours + ':' + minutes + ':' + seconds;
@@ -110,7 +242,13 @@ $(document).ready(function () {
         });
     }
 
-    $('#mark').click(function(event){
+
+
+
+
+
+    // for marked and review button
+    $('#mark').click(function (event) {
         event.preventDefault();
         console.log(event.target.class);
         console.log("Element have been subitted for mark");
@@ -123,47 +261,78 @@ $(document).ready(function () {
             console.log(selectedVal);
         }
         $.ajax({
-            type:"POST",
-            url:"http://127.0.0.1:8000/exam/next/",
-            datatype:'json',
-            data:{'answer':selectedVal},
+            type: "POST",
+            url: "http://127.0.0.1:8000/exam/next/",
+            datatype: 'json',
+            data: {'answer': selectedVal},
             success: function (data) {
                 console.log("success");
-                $('input[type="radio"]').each(function(){
-                     $(this).checked = false;
-                 });
-                     if(data['color']){
-                         $('#'+data['color'].toString()).css("background-color",'#F71B1B');
-                        }
-                     loaddata(data);
+                $('input[type="radio"]').each(function () {
+                    $(this).checked = false;
+                });
+                if (data['color']) {
+                    $('#' + data['color'].toString()).css("background-color", '#F71B1B');
                 }
-            });
-            
-        
+                loaddata(data);
+            }
+        });
+
 
     });
 
 
-    $('#grid').find('li').click(function(event){
+    $('#grid').find('li').click(function (event) {
         event.preventDefault();
         console.log("changing question via grid");
         id = event.target.id;
         console.log(id);
         $.ajax({
-            type:"GET",
-            datatype:'json',
-            data:{'id':id},
-            url:"http://127.0.0.1:8000/exam/grid/",
-            success:function(data){
+            type: "GET",
+            datatype: 'json',
+            data: {'id': id},
+            url: "http://127.0.0.1:8000/exam/grid/",
+            success: function (data) {
                 console.log("successful request");
                 loaddata(data);
+                checkmarked(data['radio_checked_key']);
+            }
+        });
+    });
+
+    $('body > div.container > div > ul').find('li').click(function(event){
+        event.preventDefault();
+        console.log("updating question via grid");
+        id = event.target.id;
+        console.log(id);
+        var replace = $('#'+id.toString()).val();
+        $('#question > label').text("Q"+replace.toString()+".");
+
+        $.ajax({
+            type: "GET",
+            datatype: 'json',
+            data: {'id': id},
+            url: "http://127.0.0.1:8000/exam/update_question/",
+            success: function (data) {
+                // console.log("successful request");
+                // console.log(data);
+                // console.log(data['question']);
+                // console.log(data['question_id']);
+                // console.log(data['choice']);
+                // console.log(data['negative']);
+                // console.log(data['negative_marks']);
+                // console.log(data['category']);
+
+                question_update(data);
+
+
+
+                // checkmarked(data['radio_checked_key']);
             }
         });
     });
 
 
-
-    $('#previous').click(function(event){
+    $('#previous').click(function (event) {
         event.preventDefault();
         console.log(event.target.class);
         console.log("Element have been subitted for previous");
@@ -177,16 +346,17 @@ $(document).ready(function () {
         //}
 
         $.ajax({
-            type:"GET",
+            type: "GET",
             //datatype:'json',
             //data:{'answer':selectedVal},
-            url:"http://127.0.0.1:8000/exam/previous/",
-            success:function(data){
+            url: "http://127.0.0.1:8000/exam/previous/",
+            success: function (data) {
 
                 console.log("Ajax on previous have been called");
                 console.log(data);
                 console.log(data['question']);
                 loaddata(data)
+                checkmarked(data['radio_checked_key']);
 
 
             }
@@ -194,11 +364,9 @@ $(document).ready(function () {
     });
 
 
-
     $('#next').click(function (event) {
         event.preventDefault();
         console.log("Element have been submitted for next ");
-
 
 
         selectedVal = null;
@@ -211,32 +379,35 @@ $(document).ready(function () {
         }
 
 
-
         $.ajax({
             type: "POST",
             url: "http://127.0.0.1:8000/exam/next/",
-            datatype:'json',
-            data:{'answer':selectedVal},
+            datatype: 'json',
+            data: {'answer': selectedVal},
             success: function (data) {
-                
+
                 console.log("success");
                 console.log(data);
                 console.log(data['question']);
                 console.log(data['choices']);
                 console.log(data['color']);
 
-                if(data['color']){
-                    $('#'+data['color'].toString()).css("background-color",'#3CC541');
+                if (data['color']) {
+                    $('#' + data['color'].toString()).css("background-color", '#3CC541');
                 }
                 var color = '#3CC541';
-                $('input[type="radio"]').each(function(){
+                $('input[type="radio"]').each(function () {
                     $(this).checked = false;
-                    });
+                });
                 loaddata(data);
                 var color = '#3CC541';
 
-
-
+                // $('input[type="radio"]').each(function () {
+                //     if($(this).val() == parseFloat(data['radio_checked_key'])){
+                //         $(this).attr('checked',true);
+                //     }
+                // });
+                checkmarked(data['radio_checked_key']);
 
 
             }
@@ -244,45 +415,59 @@ $(document).ready(function () {
         });
 
     });
+// /
+    function checkmarked(key) {
+        console.log(key);
+        var data = $("input[value=" + key.toString() + "]")
+        data.checked = true;
+        console.log("inside that function" + data);
+    }
 
 
+    function loaddata(data) {
 
+        console.log(data['negative']);
 
-    function loaddata(data){
-        $('#question').text(data['question_no']+". "+data['question']);
+        if (data['negative'] == true) {
+            var negative = "*";
+        }
+        else {
+            var negative = "";
+        }
+        // $("#negative").text(negative.color("red"));
+
+        $('#question').text(data['question_no'] + ". " + data['question'] + negative);
 
         console.log(data['choice_data'][0][0]);
         console.log(data['choice_data'][0][1]);
-        console.log("hello "+data['question_no'].toString());
+        console.log("hello " + data['question_no'].toString());
         // $('#choices').text(" ")
 
+        console.log("checked data");
         console.log(data['radio_checked_key']);
 
+        // radio_string ="input[type='radio'][name='choice'][value="+data['radio_checked_key'].toString()+"]"
+        // console.log(radio_string);
+        // $(radio_string).prop('checked',true);
+        // $('span #question_no').text(data['question_no'] + ".");
 
-        if(data['radio_checked_key']){
 
-            var check = $('li').find(data['radio_checked_key'].toString());
-            // check.checked = checked;
-            console.log(check);
+        for (i = 0; i < data['choice_data'].length; i++) {
+
+            id = '#q' + (i + 1).toString();
+            $('#test' + (i + 1).toString()).attr({'value': data['choice_data'][i][1], 'checked': false});
+            $(id).text(data['choice_data'][i][0]);
+
+            // $('#choices').append('<li class="collection=item"><input name="choice" type="radio" id="test"' + toString(i + 1) + 'value="' + toString(data['choice_data'][i][1]) + '"/><label style="color:black;font-style: normal;" for="test' + toString(i + 1) + '" id="q' + toString(i + 1) + '">' + data['choice_data'][i][0] + '</label></li>');
 
         }
+        if (data['radio_checked_key']) {
 
-        $('span #question_no').text(data['question_no']+".");
-
-
-        for(i=0;i<data['choice_data'].length;i++) {
-            
-            id = '#q'+ (i+1).toString();
-            $('#test'+(i+1).toString()).attr({'value':data['choice_data'][i][1],'checked':false});
-            $(id).text(data['choice_data'][i][0]);
-            
-            // $('#choices').append('<li class="collection=item"><input name="choice" type="radio" id="test"'+ toString(i+1)+'value="'+ toString(data['choice_data'][i][1])+'"/><label style="color:black;font-style: normal;" for="test'+toString(i+1)+'" id="q'+toString(i+1)+'">'+data['choice_data'][i][0]+'</label></li>');
+            // $("input[type='radio'][]").checked = true;
 
         }
 
     }
-
-
 
 
     // CSRF code

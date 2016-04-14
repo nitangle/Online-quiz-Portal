@@ -63,7 +63,8 @@ class RegistrationForm(forms.Form):
     Designer = forms.CharField(widget=forms.Textarea(
         attrs={'type': 'textarea', 'id': 'icon_prefix', 'class': 'validate',
                'name': 'skills'}),
-        label='Mention any designer softwares you have worked on'
+        label='Mention any designer softwares you have worked on',
+        required = False,
     )
 
     layout = Layout(

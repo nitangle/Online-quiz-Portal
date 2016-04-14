@@ -1,0 +1,17 @@
+{% extends 'Exam_portal/admin.html' %}
+
+{% block time %}
+    <div class="container"  id="time">
+        <label> Current time is {{ time.hour }} hh ,{{ time.minute }} mm, {{ time.second }} ss</label>
+        <form method="POST">
+            <span class="fields" for="name" style="font-size: larger;">Time for SI Examinations</span>
+            <label class="fields">Enter the time in this format - hh:mm:ss</label>
+            <label class="fields" for="name">Hour<input type="text" name="hour" placeholder="hh" required></label>
+            <label class="fields" for="name">Mins<input type="text" name="min" placeholder="mm" required></label>
+            <label class="fields" for="name">Secs<input type="text" name="sec" placeholder="ss" required></label>
+
+            <button class="btn btn-primary">Update the time</button>
+
+        </form>
+    </div>
+{% endblock %}

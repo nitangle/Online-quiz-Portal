@@ -14,7 +14,7 @@ class Student(models.Model):
         max_length=10)  # Stage3 of registration
 
     def __str__(self):
-        return("<Name = %s>"%self.name)
+        return "<Name = %s>"%self.name
 
 
 class Category(models.Model):
@@ -57,32 +57,29 @@ class CorrectChoice(models.Model):
 
 class StudentAnswer(models.Model):
     # answer = models.CharField(max_length=225)
-    answer = models.ForeignKey(QuestionChoice, on_delete=models.CASCADE, null=False)
+    answer = models.ForeignKey(QuestionChoice, on_delete=models.CASCADE, null=True)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
 
     def __str__(self):
         return "<Answer = %s>"%self.answer
 
+
 class MarksOfStudent(models.Model):
     student =  models.ForeignKey(Student,on_delete=models.CASCADE)
     marks = models.IntegerField()
 
     def __str__(self):
-        return("Marks of student : %s"%self.student.name)
+        return "Marks of student : %s"%self.student.name
 
 
 class Test(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    # question = models.ForeignKey(Question, on_delete=models.CASCADE)
     name = models.CharField(max_length=225)
-    time = models.TimeField(null=True)
-
+    time = models.TimeField(null=True,)
 
     def __str__(self):
-        return("<Test name = %s>"%self.name)
-
-
-
+        return "<Test name = %s>"%self.name
 
 
 '''
