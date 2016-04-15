@@ -18,10 +18,11 @@ def endadmin(request):
 
 
 def timer(request):
-    time = Test.objects.get(name='Test1').time
-    hours = time.hour
-    minutes = time.minute
-    seconds = time.second
+    time = Test.objects.all()
+
+    hours = time[0].time.hour
+    minutes = time[0].time.minute
+    seconds = time[0].time.second
 
     data = {'time': [hours, minutes, seconds]}
 
@@ -136,6 +137,9 @@ def register(request):
             email = form.cleaned_data['Email']
             contact = form.cleaned_data['Contact']
             studentno = form.cleaned_data['StudentNo']
+            if len(str(studentno)) > 10:
+                messages.error(request,"Enter a valid mobile number")
+                return HttpResponseRedirect(reverse("Exam_portal:register"))
             branch = form.cleaned_data['Branch']
             if form.cleaned_data['Hosteler'] == 'y':
                 hosteler = True
@@ -408,15 +412,23 @@ def edit_again(data):
 
     return True
 
-# def edittime(request):
-#     time = Test.objects.get(name='Test1').time
-#     print(type(time.hour))
-#     if request.method == "POST":
-#         hour = int(request.POST.get('hour'))
-#         min = int(request.POST.get('min'))
-#         s= int(request.POST.get('min'))
-#
-#     return render(request,"Exam_portal/time.html",{"time":time})
+def edittime(request):
+    time_test = Test.objects.get(name='Test1')
+
+    if request.method == "POST":
+        time = int(request.POST.get("minutes"))
+        if time>60:
+            hour = int(time/60)
+            min = time % 60
+            time_str = "{}:{}:00".format(hour,min)
+            print(time_str)
+            time_test.time = time_str
+            time_test.name = request.POST.get('name')
+            time_test.save()
+            messages.success(request,"Time have been changed ! ")
+            return HttpResponseRedirect(reverse('Exam_portal:edittime'))
+
+    return render(request,"Exam_portal/time.html",{"time":time_test})
 
 
 # def delete

@@ -46,40 +46,40 @@ $(document).ready(function () {
 
 
 
-    // var id_first = $('body > div.container > div > ul > span:nth-child(1) > li').attr('id');
-    // // console.log(id_first);
-    //
-    // var entry_flag = $("#admin_page_request").val();
-    //
-    // if(entry_flag){
-    //
-    //
-    //     $.ajax({
-    //         type: "GET",
-    //         datatype: 'json',
-    //         data: {'id': id_first},
-    //         url: "http://127.0.0.1:8000/exam/update_question/",
-    //         success: function (data) {
-    //             // console.log("successful request");
-    //             // console.log(data);
-    //             // console.log(data['question']);
-    //             // console.log(data['question_id']);
-    //             // console.log(data['choice']);
-    //             // console.log(data['negative']);
-    //             // console.log(data['negative_marks']);
-    //             // console.log(data['category']);
-    //
-    //             question_update(data);
-    //             // $('#id_question').attr("value","Rupanshu");
-    //
-    //
-    //             // checkmarked(data['radio_checked_key']);
-    //         }
-    //     });
-    //
-    //
-    //     entry_flag = false;
-    // }
+    id_first = $('body > div.container > div > ul > span:nth-child(2) > li').attr('id');
+    // console.log(id_first);
+
+    var entry_flag = $("#admin_page_request").val();
+
+    if(entry_flag){
+
+        console.log(id_first);
+        $.ajax({
+            type: "GET",
+            datatype: 'json',
+            data: {'id': id_first},
+            url: "http://127.0.0.1:8000/exam/update_question/",
+            success: function (data) {
+                // console.log("successful request");
+                // console.log(data);
+                // console.log(data['question']);
+                // console.log(data['question_id']);
+                // console.log(data['choice']);
+                // console.log(data['negative']);
+                // console.log(data['negative_marks']);
+                // console.log(data['category']);
+
+                question_update(data);
+                // $('#id_question').attr("value","Rupanshu");
+
+
+                // checkmarked(data['radio_checked_key']);
+            }
+        });
+
+
+        entry_flag = false;
+    }
 
 
 
@@ -131,6 +131,7 @@ $(document).ready(function () {
 
         if ($('#category_list').val() == '' && entry == 1) {
             $('.category').append("<input type='text' name='new_category' placeholder='Name of new category' required/>");
+            $('#category_list').attr("disabled",true);
             entry = 0;
 
 
@@ -462,8 +463,8 @@ $(document).ready(function () {
 
         }
         if (data['radio_checked_key']) {
-
-            // $("input[type='radio'][]").checked = true;
+            var input_string = "#choices > li[id="+data['radio_checked_key'].toString()+"]";
+            $(input_string).find('input').prop("checked",true);
 
         }
 

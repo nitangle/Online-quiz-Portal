@@ -4,7 +4,10 @@
 {% block admin %}
 <script>
 
-    document.load(function(e){
+
+
+    document.addEventListener("load",function(e){
+        e.preventDefault();
         $("#id_question").attr("value","");
         $("#id_marks").attr("value","");
         $("#id_negative").prop("checked",false);
@@ -66,8 +69,9 @@
 
                 {% if display_not %}
                     <div class="category">
+                        <span>Please Select a category from below </span><br>
                         <select name="category" id="category_list">
-                            <option selected="selected">Select a category</option>
+                            <option selected="selected"></option>
                             {% for i in category %}
 
                                 <option value="{{ i.category }}" id="{{ i.id }}">{{ i.category }}</option>
@@ -120,7 +124,7 @@
                 <div class="button_group" style="margin: 2%;">
                     <button type="submit"    class="btn btn-primary">{% if display %}Update{% else %}Add
                         Another{% endif %}</button>
-                    <a class="btn btn-primary" onclick="window.location.href='../endadmin'"> Finish</a>
+                    <a class="btn btn-primary" href='../endadmin'> Finish</a>
                     {% if display %}
 
                         <button class="btn btn-danger" id="delete" style="float: right; background-color: lightcoral;">

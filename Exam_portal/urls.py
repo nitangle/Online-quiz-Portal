@@ -23,6 +23,6 @@ urlpatterns = [
     url(r'^endadmin/$' , views.endadmin , name="endadmin"),
     url(r'^delete/$' , ajax.delete , name="delete"),
     url(r'^adminchoice/$', views.adminchoice , name="admin_chocie"),
-    # url(r'^edittime/$' , views.edittime ,name="edittime"),
+    url(r'^edittime/$' , views.edittime ,name="edittime"),
 
 ]
