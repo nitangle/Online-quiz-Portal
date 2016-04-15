@@ -1,5 +1,8 @@
 from django import forms
+from django.contrib.auth.models import User
 from material import Layout, Row, Fieldset, Column, Span5
+
+# form django.utils.translation import ugettext_lazy as _
 
 BRANCH_CHOICES = (('cse', 'CSE'),
                   ('it', 'IT'),
@@ -13,15 +16,23 @@ YES_OR_NO = (('y', 'yes'),
              ('n', 'no'))
 
 
+# class AdminRegister(forms.Form):
+#     username = forms.CharField(label="Username", max_length=20, required=True)
+#     password1 = forms.CharField(label="Password", max_length=20,
+#                                 widget=forms.PasswordInput(attrs={"name": "password1", "type": "password"}))
+#     password2 = forms.CharField(label="Password Again", max_length=20,
+#                                 widget=forms.PasswordInput(attrs={"name": "password1", "type": "password"}))
+
+
 class AdminForm(forms.Form):
     question = forms.CharField(label='Question Text', max_length=225, required=True)
     marks = forms.IntegerField(label='marks', required=True)
-    negative = forms.BooleanField(label='have negative marking', required= False)
-    negative_marks = forms.IntegerField(label="negative marks",required= False)
+    negative = forms.BooleanField(label='have negative marking', required=False)
+    negative_marks = forms.IntegerField(label="negative marks", required=False)
 
 
 class RegistrationForm(forms.Form):
-    Name = forms.CharField(max_length=50,
+    Name = forms.CharField(max_length=80,
                            label='Name', widget=forms.TextInput(
             attrs={'type': 'text', 'id': 'icon_prefix', 'class': 'validate',
                    'name': 'name'})
@@ -36,8 +47,8 @@ class RegistrationForm(forms.Form):
         label="Email"
     )
 
-    StudentNo = forms.IntegerField(widget=forms.NumberInput(
-        attrs={'type': 'number', 'id': 'icon_prefix', 'class': 'validate',
+    StudentNo = forms.CharField(widget=forms.TextInput(
+        attrs={'type': 'text', 'id': 'icon_prefix', 'class': 'validate',
                'name': 'student_no'}),
         label='Student No.'
     )
@@ -64,7 +75,7 @@ class RegistrationForm(forms.Form):
         attrs={'type': 'textarea', 'id': 'icon_prefix', 'class': 'validate',
                'name': 'skills'}),
         label='Mention any designer softwares you have worked on',
-        required = False,
+        required=False,
     )
 
     layout = Layout(

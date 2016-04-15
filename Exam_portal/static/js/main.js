@@ -10,7 +10,7 @@
     // });
 
 
-$(document).ready(function () {
+$(document).ready(function (event) {
 
 
 
@@ -148,6 +148,7 @@ $(document).ready(function () {
             url: "http://127.0.0.1:8000/exam/grid/",
             success: function (data) {
                 loaddata(data);
+                checkmarked(data['radio_checked_key']);
 
             }
 
@@ -160,34 +161,35 @@ $(document).ready(function () {
 
 
     //code for preventing right-click refresh so that the jquery timer wont be refereshed
-    $(document).mousedown(function (e) {
-        if (e.button == 2) {
-            e.preventDefault();
-            return false;
-        } else {
-            return true;
-        }
-    });
-    // $(this).bind("contextmenu", function (e) {
-    //     return false;
+    // $(document).mousedown(function (e) {
+    //     if (e.button == 2) {
+    //         e.preventDefault();
+    //         return false;
+    //     } else {
+    //         return true;
+    //     }
     // });
-    document.onmousedown = disableclick;
-    status = "Right Click Disabled";
-    function disableclick(event) {
-        if (event.button == 2) {
-            event.preventDefault();
-            // alert(status);
+    // // $(this).bind("contextmenu", function (e) {
+    // //     return false;
+    // // });
+    // document.onmousedown = disableclick;
+    // status = "Right Click Disabled";
+    // function disableclick(event) {
+    //     if (event.button == 2) {
+    //         event.preventDefault();
+    //         // alert(status);
+    //
+    //         return false;
+    //     }
+    // }
 
-            return false;
-        }
-    }
+
+
+    //-----------------------------------------------------------------------------------
 
     function disableF5(e) {
         if ((e.which || e.keyCode) == 116) e.preventDefault();
     };
-
-    //-----------------------------------------------------------------------------------
-
     var flagVal = "";
     var flag = $("#timeStarter");
     if (flag.length > 0) {
@@ -196,6 +198,10 @@ $(document).ready(function () {
 
 
     if (flagVal == 'true') {
+        disableF5(event);
+        $(this).bind("contextmenu", function (e) {
+            return false;
+        });
         $.ajax({
             type: "GET",
             datatype: 'json',
@@ -272,9 +278,13 @@ $(document).ready(function () {
                     $(this).checked = false;
                 });
                 if (data['color']) {
-                    $('#' + data['color'].toString()).css("background-color", '#F71B1B');
+                    $('#' + data['color'].toString()).css("background-color", '#EC2424');
+                }
+                else{
+                    $('#' + data['color'].toString()).css("background-color", '#EC7724');
                 }
                 loaddata(data);
+                checkmarked(data['radio_checked_key']);
             }
         });
 
@@ -394,7 +404,7 @@ $(document).ready(function () {
                 console.log(data['color']);
 
                 if (data['color']) {
-                    $('#' + data['color'].toString()).css("background-color", '#3CC541');
+                    $('#' + data['color'].toString()).css("background-color", '#6CB741');
                 }
                 var color = '#3CC541';
                 $('input[type="radio"]').each(function () {
@@ -408,6 +418,7 @@ $(document).ready(function () {
                 //         $(this).attr('checked',true);
                 //     }
                 // });
+
                 checkmarked(data['radio_checked_key']);
 
 
@@ -420,7 +431,7 @@ $(document).ready(function () {
     function checkmarked(key) {
         console.log(key);
         var data = $("input[value=" + key.toString() + "]")
-        data.checked = true;
+        data.prop("checked",true);
         console.log("inside that function" + data);
     }
 
@@ -431,6 +442,7 @@ $(document).ready(function () {
 
         if (data['negative'] == true) {
             var negative = "*";
+            
         }
         else {
             var negative = "";
@@ -462,8 +474,10 @@ $(document).ready(function () {
             // $('#choices').append('<li class="collection=item"><input name="choice" type="radio" id="test"' + toString(i + 1) + 'value="' + toString(data['choice_data'][i][1]) + '"/><label style="color:black;font-style: normal;" for="test' + toString(i + 1) + '" id="q' + toString(i + 1) + '">' + data['choice_data'][i][0] + '</label></li>');
 
         }
+        
         if (data['radio_checked_key']) {
             var input_string = "#choices > li[id="+data['radio_checked_key'].toString()+"]";
+            console.log("Executing inside that loaddata");
             $(input_string).find('input').prop("checked",true);
 
         }

@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Student(models.Model):
-    name = models.CharField(max_length=20)  # Stage1 of registration
+    name = models.CharField(max_length=100)  # Stage1 of registration
     student_no = models.IntegerField()  # Stage2 of registration
     branch = models.CharField(max_length=5)  # Stage2 of registration
     contact = models.BigIntegerField()  # Stage1 of registration

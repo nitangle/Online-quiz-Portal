@@ -2,7 +2,7 @@
 
 
 {% block ajax %}
-    <form>
+    <form style="font-size: larger;">
     {% csrf_token %}
     <div class="container" style="padding: 3%;">
     <div class="container" style="display: none;color: red;font-size: larger;" id="error_message">
@@ -19,16 +19,16 @@
     <div class="container" style="width: 100%;padding-top: 5%;">
 
     <div>
-        <div class="container-fluid col-sm-3" id="grid" style="background-color:whitesmoke;border-radius: 5%; " >
+        <div class="container-fluid col-sm-3" id="grid" style="background-color:whitesmoke;border-radius: 5%;float: right;width: 32%; padding:1%; " >
                     <div  style="padding:3px;float:left;">
                         <ul >
                         {% for key in keys %}
-                            <li  class="btn-floating btn-large" style="background-color: #D5E7EA;color: #000;margin: 2px;" id="{{ key }}">{{ forloop.counter }}</li>
+                            <li  class="btn-floating btn-large" style="background-color: #D5E7EA;color: #000;margin:2%;" id="{{ key }}">{{ forloop.counter }}</li>
                         {% endfor %}
                         </ul>
                      </div>
         </div>
-        <div class="col-sm-8" style="float:right;">
+        <div class="col-sm-8" style="float:left;">
         <div class="container"  style="width: 100%;" id="category">
                 <ul>
                     {% for category_question_id,category in instance.category %}
@@ -37,7 +37,7 @@
                 </ul>
         </div>
         <ul class="collection">
-            <li class="collection-item" id="question" style="font-size:large;"><span id ="question_no">{{ instance.question_no }}. </span>{{ instance.question }}<label id="negative" >{% if instance.negative %}*{% endif %}</label></li>
+            <li class="collection-item" id="question" style="font-size:large;"><span id ="question_no">{{ instance.question_no }}. </span>{{ instance.question }}<strong><label id="negative" style="color: red;padding-left:2%;margin: 0px; ">{% if instance.negative %}&times;{% endif %}</label></strong></li>
             <div class="container-fluid" id="choices" style="padding:2%;">
             {% for choice,id in instance.choice_data %}
                 <li class="collection=item" id="{{ id }}">
@@ -53,17 +53,24 @@
             {% endfor %} -->
             </div>
         </ul>
-        
-        <button  class="btn {{ request.session.current }}" type="submit"  id="next" style="float:right">Next</button>
-        <button  class="btn" type="submit" id="previous" style="float:left">Previous</button>
-        <button  class="btn" type="submit" id="mark" style="float:left;background:#EE6E73;float:right;margin-right:5px;">Mark for Review</button>
+
+        <div class="container-fluid" style="padding: 0px;">
+        <button  class="btn {{ request.session.current }}" type="submit"  id="next" style="float:right;margin: 4px;">Submit and Next</button>
+        <button  class="btn" type="submit" id="previous" style="float:left;margin: 4px;">Previous</button>
+        <button  class="btn" type="submit" id="mark" style="float:left;background:#EE6E73;float:right;margin: 4px;">Mark for Review</button>
+        </div>
+        <div class="container" style="margin-top:5%;margin-right:0px;padding-right: 0px;text-align:right;">
+
+                <label style="padding: 2%; ">If you are Done you can Finish your Exam</label><button class="btn " id="endExam"  style="background-color: #A73232;" >End Exam</button>
+
+        </div>
 
         </div>
 
     </div>
     </div>
 
-    <a class="btn" href="../end" >End Exam</a>
+
 
 
 </form>

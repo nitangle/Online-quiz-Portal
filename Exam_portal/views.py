@@ -7,14 +7,14 @@ from django.shortcuts import render, get_object_or_404, redirect, Http404
 from django.core.urlresolvers import reverse
 import json
 from django.core.exceptions import ObjectDoesNotExist
-from django.template import loader, Context
+# from django.template import loader, Context
 from .forms import RegistrationForm, AdminForm
-from .models import Student, Question, QuestionChoice, Category, Test, CorrectChoice
+from .models import Student, Question, Category, Test, CorrectChoice,MarksOfStudent
 from .ajax import markCalculate
 
 
 def endadmin(request):
-    return render(request,"Exam_portal/endadmin.html", { })
+    return render(request, "Exam_portal/endadmin.html", {})
 
 
 def timer(request):
@@ -27,7 +27,6 @@ def timer(request):
     data = {'time': [hours, minutes, seconds]}
 
     return HttpResponse(json.dumps(data), content_type='application/json')
-    return HttpResponse("hello")
 
 
 def adminchoice(request):
@@ -47,11 +46,9 @@ def show(request):
     category1 = Category.objects.all()
     question = category1[0].question_set.all().order_by('id')
     # print(question[0])
-    question_object_list = list(question)
+    # question_object_list = list(question)
     # print(list(question))
     choice = question[0].questionchoice_set.all().order_by('id')
-
-
 
     category_first_data = []
     question_key = []
@@ -101,8 +98,10 @@ def show(request):
     request.session['key_list'] = question_key
     request.session['current'] = question[0].id
 
-    # when the first question is displayed, we first have to store its pk in a session for further submittion of the user/student answer
-    # on the ajax call function again a list of pk for the corresponding question will be generated and on next button the index of the list will be incremented for next question fetch
+    # when the first question is displayed, we first have to store its pk in a session for further submittion
+    # of the user/student answer
+    # on the ajax call function again a list of pk for the corresponding question will be generated and on next
+    # button the index of the list will be incremented for next question fetch
 
     context_variable = {
         "keys": question_key,
@@ -138,7 +137,7 @@ def register(request):
             contact = form.cleaned_data['Contact']
             studentno = form.cleaned_data['StudentNo']
             if len(str(studentno)) > 10:
-                messages.error(request,"Enter a valid mobile number")
+                messages.error(request, "Enter a valid mobile number")
                 return HttpResponseRedirect(reverse("Exam_portal:register"))
             branch = form.cleaned_data['Branch']
             if form.cleaned_data['Hosteler'] == 'y':
@@ -177,7 +176,7 @@ def instruction(request):
 
 def admin(request):
     category = Category.objects.all().order_by('id')
-    time = Test.objects.get(name='Test1').time
+    time = Test.objects.all()[0]
     # test = Test.objects.all()
     if request.method == "POST":
         form = AdminForm(request.POST or None)
@@ -198,7 +197,6 @@ def admin(request):
 
             correct_choice = request.POST.get('correct_choice')
 
-            time = request.POST.get('time')
             print(choice)
             print(category)
             print(correct_choice)
@@ -209,7 +207,7 @@ def admin(request):
                 "category": category,
                 "correct_choice": correct_choice,
                 "form_data": form.cleaned_data,
-                # "time": time[0],
+
             }
 
             if update_question(question_data):
@@ -217,8 +215,6 @@ def admin(request):
 
             print(type(request.POST.get('correct_choice')))
             return HttpResponseRedirect(reverse('Exam_portal:admin'))
-            # print (request.POST.get('choice1'))
-            # print(request.POST.get('new_category'))
 
     else:
         form = AdminForm()
@@ -228,10 +224,10 @@ def admin(request):
     query_set = {
         "category": category,
         "form": form,
-        "first":first,
-        'display_not':True,
+        "first": first,
+        'display_not': True,
         # "test": test,
-        "time":time,
+        "time": time,
     }
 
     # print (query_set)
@@ -267,12 +263,11 @@ def update_question(question_data):
 
     choice = question.questionchoice_set
 
-    correct_choice = question.correctchoice_set
+    # correct_choice = question.correctchoice_set
     choice_data = question_data['choice']
     for i in range(len(choice_data)):
         choice.create(choice=choice_data[i])
         print (choice_data[i])
-
 
     CorrectChoice.objects.create(question_id=question,
                                  correct_choice=choice.get(
@@ -283,18 +278,12 @@ def update_question(question_data):
     return True
 
 
-
-
-
-
-
 def edit_question(request):
-
     category1 = Category.objects.all().order_by('id')
     question = Question.objects.all().order_by('id')
     choice = question[0].questionchoice_set.all().order_by('id')
 
-    category_first_data = []
+    # category_first_data = []
     question_key = []
     # for i in range(0, len(category1)):
     #     qs = category1[i].question_set.all().order_by('id')
@@ -308,8 +297,8 @@ def edit_question(request):
     print(question_key)
 
     question_data = []
-    for i in range(1,len(question_key)+1):
-        data = (i,question_key[i-1])
+    for i in range(1, len(question_key) + 1):
+        data = (i, question_key[i - 1])
         question_data.append(data)
 
     # first = category1[0].question_set.all().order_by('id')
@@ -342,32 +331,30 @@ def edit_question(request):
             # time = request.POST.get('time')
             print(choice)
 
-
-
             print(correct_choice)
             print (form.cleaned_data)
             #
             data = {
                 "choice": choice,
-                "current_question":current_question,
+                "current_question": current_question,
                 "correct_choice": correct_choice,
                 "form_data": form.cleaned_data,
 
             }
 
             if edit_again(data):
-                messages.success(request,"Question have been updated!")
+                messages.success(request, "Question have been updated!")
 
     else:
         form = AdminForm(None)
 
     query_set = {
-        "category":category1,
-        "display":True,
-        "display_not":False,
-        "form":form,
-        "Number":question_data,
-        "question":question[0],
+        "category": category1,
+        "display": True,
+        "display_not": False,
+        "form": form,
+        "Number": question_data,
+        "question": question[0],
         # "first":first[0].id,
     }
 
@@ -375,7 +362,6 @@ def edit_question(request):
 
 
 def edit_again(data):
-
     print(data)
     question = Question.objects.get(pk=data['current_question'])
 
@@ -387,7 +373,7 @@ def edit_again(data):
     count = 0
     for choice in choices:
         choice.choice = data['choice'][count]
-        count +=1
+        count += 1
         choice.save()
     if data['form_data']['negative'] is True and data['form_data']['negative_marks'] != 0:
         question.negative = data['form_data']['negative']
@@ -403,7 +389,7 @@ def edit_again(data):
     # print(choices[int(data['correct_choice'])])
 
     for i in correct_query_set:
-        i.correct_choice = choices[int(data['correct_choice'])-1]
+        i.correct_choice = choices[int(data['correct_choice']) - 1]
         i.save()
 
     question.marks = int(data['form_data']['marks'])
@@ -412,23 +398,33 @@ def edit_again(data):
 
     return True
 
+
 def edittime(request):
-    time_test = Test.objects.get(name='Test1')
+    time_test = Test.objects.all()[0]
 
     if request.method == "POST":
+
         time = int(request.POST.get("minutes"))
-        if time>60:
-            hour = int(time/60)
+        if time != 0:
+            hour = int(time / 60)
             min = time % 60
-            time_str = "{}:{}:00".format(hour,min)
+            time_str = "{}:{}:00".format(hour, min)
             print(time_str)
             time_test.time = time_str
             time_test.name = request.POST.get('name')
             time_test.save()
-            messages.success(request,"Time have been changed ! ")
+            messages.success(request, "Time have been changed ! ")
             return HttpResponseRedirect(reverse('Exam_portal:edittime'))
 
-    return render(request,"Exam_portal/time.html",{"time":time_test})
+    return render(request, "Exam_portal/time.html", {"time": time_test})
+
+def student_section(request):
+    try:
+        student_marks = MarksOfStudent.objects.all()
+    except ObjectDoesNotExist:
+        student_marks = "No student have given the exams yet !"
+
+    return render(request, "Exam_portal/student_section.html", {"students":student_marks} )
 
 
-# def delete
+# def admin_register(request):

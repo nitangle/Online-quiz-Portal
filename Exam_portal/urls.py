@@ -24,5 +24,5 @@ urlpatterns = [
     url(r'^delete/$' , ajax.delete , name="delete"),
     url(r'^adminchoice/$', views.adminchoice , name="admin_chocie"),
     url(r'^edittime/$' , views.edittime ,name="edittime"),
-
+    url(r'^student_section/$' , views.student_section, name="student"),
 ]

@@ -6,13 +6,7 @@
 
 
 
-    document.addEventListener("load",function(e){
-        e.preventDefault();
-        $("#id_question").attr("value","");
-        $("#id_marks").attr("value","");
-        $("#id_negative").prop("checked",false);
-        $("#id_negative_marks").attr("value","");
-    });
+
 </script>
 
 
@@ -70,7 +64,7 @@
                 {% if display_not %}
                     <div class="category">
                         <span>Please Select a category from below </span><br>
-                        <select name="category" id="category_list">
+                        <select name="category" id="category_list" required>
                             <option selected="selected"></option>
                             {% for i in category %}
 
@@ -131,7 +125,7 @@
                             Delete
                         </button>
                     {% endif %}<br>
-                    <div class="btn btn-link">Clicking on " Finish " won't save your data</div>
+                    <div class="btn btn-link">Clicking on " Finish " won't update your data</div>
                 </div>
             </div>
         </form>
