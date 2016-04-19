@@ -1,0 +1,15 @@
+{% extends 'Exam_portal/admin.html' %}
+
+{% block content %}
+    <div class="container">
+        <form method="POST">
+            {% csrf_token %}
+            <table>
+                {{ form.as_table }}
+            </table>
+            <button type="submit" class="btn btn_primary">Submit</button>
+
+        </form>
+    </div>
+
+{% endblock %}

@@ -8,7 +8,6 @@ app_name='Exam_portal'
 urlpatterns = [
     url(r'^register/$',views.register , name="register"),
     url(r'^instruction/$' ,views.instruction, name="instruction"),
-    # url(r'^ajaxdisplay/$', ajax.ajax),
     url(r'^show/$',views.show,name="ajaxshow"),
     url(r'^next/$',ajax.ajaxnext, name="ajaxnext"),
     url(r'^previous/$',ajax.ajaxprevious, name="ajaxprevious"),
@@ -18,11 +17,11 @@ urlpatterns = [
     url(r'^end/$', views.end, name="end"),
     url(r'^admin/$' ,views.admin , name="admin"),
     url(r'^edit/$' ,views.edit_question, name="edit_question"),
-    # url(r'^test/$', views.testemplate , name='test')
     url(r'^update_question/$',ajax.question_update,name="question_update"),
-    url(r'^endadmin/$' , views.endadmin , name="endadmin"),
     url(r'^delete/$' , ajax.delete , name="delete"),
-    url(r'^adminchoice/$', views.adminchoice , name="admin_chocie"),
+    url(r'^adminchoice/$', views.adminchoice , name="adminchocie"),
     url(r'^edittime/$' , views.edittime ,name="edittime"),
     url(r'^student_section/$' , views.student_section, name="student"),
+    url(r'^adminLogin/$' , views.admin_auth , name="admin_auth"),
+    url(r'^adminLogout/$' , views.logout_admin, name="logout_admin")
 ]

@@ -17,6 +17,9 @@ class Student(models.Model):
         return "<Name = %s>"%self.name
 
 
+
+
+
 class Category(models.Model):
     category = models.CharField(max_length=225)
 

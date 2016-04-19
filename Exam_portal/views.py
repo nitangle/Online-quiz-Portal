@@ -5,16 +5,13 @@ from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect, Http404
 from django.core.urlresolvers import reverse
+from django.contrib import auth
 import json
 from django.core.exceptions import ObjectDoesNotExist
 # from django.template import loader, Context
-from .forms import RegistrationForm, AdminForm
+from .forms import RegistrationForm, AdminForm , AdminLoginForm
 from .models import Student, Question, Category, Test, CorrectChoice,MarksOfStudent
 from .ajax import markCalculate
-
-
-def endadmin(request):
-    return render(request, "Exam_portal/endadmin.html", {})
 
 
 def timer(request):
@@ -30,6 +27,10 @@ def timer(request):
 
 
 def adminchoice(request):
+    if not request.user.is_authenticated():
+        messages.error(request, "Opps You're not an admin ")
+        return HttpResponseRedirect(reverse("Exam_portal:admin_auth"))
+
     return render(request, 'Exam_portal/admin_interface.html', {})
 
 
@@ -176,7 +177,7 @@ def instruction(request):
 
 def admin(request):
     category = Category.objects.all().order_by('id')
-    time = Test.objects.all()[0]
+    # time = Test.objects.all()[0]
     # test = Test.objects.all()
     if request.method == "POST":
         form = AdminForm(request.POST or None)
@@ -190,10 +191,20 @@ def admin(request):
             for i in range(1, 5):
                 choice.append(request.POST.get(choice_selector + str(i)))
 
-            if request.POST.get('category') != '':
-                category = request.POST.get('category')
-            else:
+            # print(request.POST.get('new_category'))
+
+            if request.POST.get('new_category') != "" and request.POST.get('new_category') is not None:
                 category = request.POST.get('new_category')
+            else:
+                category = request.POST.get('category')
+
+
+            # elif :
+            #
+            # if request.POST.get('category') != '' and request.POST.get('new_category') != "":
+            #     category = request.POST.get('category')
+            # else:
+            #     category = request.POST.get('new_category')
 
             correct_choice = request.POST.get('correct_choice')
 
@@ -219,15 +230,22 @@ def admin(request):
     else:
         form = AdminForm()
 
-    first = category[0].question_set.all().order_by('id')
+    # first = category[0].question_set.all().order_by('id')
+
+    if category is None:
+        category = "No category yet"
+        category_flag = False
+    else:
+        category_flag = True
 
     query_set = {
+        "category_flag":category_flag,
         "category": category,
         "form": form,
-        "first": first,
+        # "first": first,
         'display_not': True,
         # "test": test,
-        "time": time,
+        # "time": time,
     }
 
     # print (query_set)
@@ -252,7 +270,7 @@ def update_question(question_data):
 
     print(negative_marks)
     try:
-        category = Category.objects.get(category=question_data['category'])
+        category = CatadminLogin/egory.objects.get(category=question_data['category'])
     except ObjectDoesNotExist:
         category = Category.objects.create(category=question_data['category'])
 
@@ -279,18 +297,15 @@ def update_question(question_data):
 
 
 def edit_question(request):
+    if not request.user.is_authenticated():
+        messages.error(request, "Opps You're not an admin ")
+        return HttpResponseRedirect(reverse("Exam_portal:admin_auth"))
+
     category1 = Category.objects.all().order_by('id')
     question = Question.objects.all().order_by('id')
     choice = question[0].questionchoice_set.all().order_by('id')
 
-    # category_first_data = []
     question_key = []
-    # for i in range(0, len(category1)):
-    #     qs = category1[i].question_set.all().order_by('id')
-    #     data = (qs[0].id, category1[i].category)
-    #     category_first_data.append(data)
-    #     for j in range(0, len(qs)):
-    #         question_key.append(qs[j].id)
     for i in question:
         question_key.append(i.id)
 
@@ -400,7 +415,18 @@ def edit_again(data):
 
 
 def edittime(request):
-    time_test = Test.objects.all()[0]
+
+    if not request.user.is_authenticated():
+        messages.error(request, "Opps You're not an admin ")
+        return HttpResponseRedirect(reverse("Exam_portal:admin_auth"))
+
+
+    try:
+        time_test = Test.objects.all()[0]
+        time_flag = True
+    except Exception:
+        time_test = None
+        time_flag = False
 
     if request.method == "POST":
 
@@ -410,21 +436,65 @@ def edittime(request):
             min = time % 60
             time_str = "{}:{}:00".format(hour, min)
             print(time_str)
-            time_test.time = time_str
-            time_test.name = request.POST.get('name')
-            time_test.save()
+            if time_test is None:
+                Test.objects.create(name=request.POST.get('name'),time=time_str )
+            else:
+                time_test.time = time_str
+                time_test.name = request.POST.get('name')
+                time_test.save()
             messages.success(request, "Time have been changed ! ")
             return HttpResponseRedirect(reverse('Exam_portal:edittime'))
 
     return render(request, "Exam_portal/time.html", {"time": time_test})
 
 def student_section(request):
+
+    if not request.user.is_authenticated():
+        messages.error(request, "Opps You're not an admin ")
+        return HttpResponseRedirect(reverse("Exam_portal:admin_auth"))
+
+
+
     try:
-        student_marks = MarksOfStudent.objects.all()
+        student_marks = MarksOfStudent.objects.all().order_by('-marks')
     except ObjectDoesNotExist:
         student_marks = "No student have given the exams yet !"
 
     return render(request, "Exam_portal/student_section.html", {"students":student_marks} )
 
 
+def admin_auth(request):
+
+    if request.method == "POST":
+        form = AdminLoginForm(request.POST or None)
+
+        if form.is_valid():
+            username = form.cleaned_data.get('username','')
+            password = form.cleaned_data.get('password','')
+            user = auth.authenticate(username=username, password=password)
+
+            print(user)
+            if user is not None:
+                auth.login(request,user)
+                return HttpResponseRedirect("/exam/adminchoice")
+            else:
+                messages.error(request,"Invalid user. Please enter a valid username")
+                error = True
+                return HttpResponseRedirect(reverse("Exam_portal:admin_auth"))
+    else:
+        error = False
+        form = AdminLoginForm()
+
+    context_variable = {
+        "form" : form,
+        "error" : error,
+    }
+
+    return render(request , "Exam_portal/admin_login.html" , context_variable)
+
+def logout_admin(request):
+    auth.logout(request)
+    return HttpResponseRedirect(reverse("Exam_portal:admin_auth"))
 # def admin_register(request):
+
+

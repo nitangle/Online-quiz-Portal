@@ -27,24 +27,41 @@
 
     </div>
 </nav>
+{% csrf_token %}
+
+{% if user.is_authenticated %}
+<div class="container">
+    <a class="btn btn-link" href="../adminLogout" style="float:right">logout</a>
+</div>
+{% endif %}
 
 
-
+{% block content %}{% endblock %}
 {% block question %}{% endblock %}
-{%  block interface %}{% endblock %}
+{% block interface %}{% endblock %}
 {% block time %}{% endblock %}
 {% block student %}{% endblock %}
-{% block admin %} {% endblock  %}
+{% block admin %} {% endblock %}
 {% block endadmin %}{% endblock %}
+
 <div class="container">
-{% if messages %}
-    <div class="alert alert-success">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-      {% for message in messages %}
-      <span><Strong>Done!</Strong> {{ message }}</span>
-      {% endfor %}
-    </div>
-{% endif %}
+    {% if messages %}
+        {% if not error %}
+            <div class="alert alert-danger">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                {% for message in messages %}
+                    <span><Strong>Error! </Strong> {{ message }}</span>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-success">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                {% for message in messages %}
+                    <span> {{ message }}</span>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endif %}
 </div>
 
 </body>

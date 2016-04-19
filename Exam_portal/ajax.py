@@ -3,9 +3,7 @@ import json
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 
-
 from .models import Student, QuestionChoice, Question, StudentAnswer, CorrectChoice, MarksOfStudent
-
 
 
 def delete(request):
@@ -16,22 +14,22 @@ def delete(request):
     try:
         question.delete()
 
-        return HttpResponse(json.dumps({"status":True}), content_type="application/json")
+        return HttpResponse(json.dumps({"status": True}), content_type="application/json")
     except Exception as e:
         print(e)
 
-    return HttpResponse(json.dumps({"status":False}), content_type="application/json")
+    return HttpResponse(json.dumps({"status": False}), content_type="application/json")
 
 
 def question_update(request):
     if request.is_ajax() or request.method == "POST":
         id = (request.GET.get('id'))
-        data = getUpdate(request,id)
+        data = getUpdate(request, id)
 
-        return HttpResponse(json.dumps(data),content_type="application/json")
+        return HttpResponse(json.dumps(data), content_type="application/json")
 
 
-def getUpdate(request,id):
+def getUpdate(request, id):
     question = Question.objects.get(pk=id)
     print("fetching data")
 
@@ -47,28 +45,22 @@ def getUpdate(request,id):
         choice_list.append(choice[i].choice)
         choice_data.append(data)
 
-    correct_radio_checked = choice_list.index(correct) +1
-    print(correct_radio_checked+1)
-
-
-
+    correct_radio_checked = choice_list.index(correct) + 1
+    print(correct_radio_checked + 1)
 
     data = {
-        "question":question.question_text,
-        "question_id":question.id,
-        "marks":question.marks,
-        "choice":choice_data,
-        "negative":question.negative,
-        "negative_marks":question.negative_marks,
-        "category":question.type.id,
-        "correct_checked":correct_radio_checked,
+        "question": question.question_text,
+        "question_id": question.id,
+        "marks": question.marks,
+        "choice": choice_data,
+        "negative": question.negative,
+        "negative_marks": question.negative_marks,
+        "category": question.type.id,
+        "correct_checked": correct_radio_checked,
 
     }
 
     return data
-
-
-
 
 
 def grid(request):
@@ -111,8 +103,9 @@ def markCalculate(request):
 
         if student_answer.answer == correct_choice.correct_choice:
             marks = marks + question.marks
-        elif question.negative is True and student_answer.answer != correct_choice.correct_choice:
-            marks = marks - question.negative_marks
+        elif question.negative is True and student_answer.answer != correct_choice.correct_choice and question.negative_marks is not None:
+            if question.marks is not None:
+                marks = marks - question.negative_marks
     print("marks")
     print(marks)
 
@@ -201,7 +194,7 @@ def getData(pk, request):
         query_set = {
             "question_no": question_no,
             "question": question.question_text,
-            "negative":question.negative,
+            "negative": question.negative,
             "choice_data": choice_data,
             "radio_checked_key": radio_checked_key,
         }

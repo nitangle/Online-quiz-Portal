@@ -2,12 +2,10 @@
 
 
 {% block admin %}
-<script>
+    <script>
 
 
-
-
-</script>
+    </script>
 
 
 
@@ -20,9 +18,9 @@
         On this page you can add Question to the SI Recruitment. You can add a category or add to the existing category
         you have to add 4 choices and net to each choice you can correct which chocie is correct
 
-         {% if display %}
-         <a class="btn btn-primary" href="../admin">Add Question</a>
-         {% else %}
+        {% if display %}
+            <a class="btn btn-primary" href="../admin">Add Question</a>
+        {% else %}
             <a class="btn btn-primary" href="../edit">Edit question</a>
         {% endif %}
     </div>
@@ -62,20 +60,30 @@
 
 
                 {% if display_not %}
-                    <div class="category">
-                        <span>Please Select a category from below </span><br>
-                        <select name="category" id="category_list" required>
-                            <option selected="selected"></option>
-                            {% for i in category %}
 
-                                <option value="{{ i.category }}" id="{{ i.id }}">{{ i.category }}</option>
+                    {% if category_flag %}
+                        <div class="category">
+                            <span>Please Select a category from below </span><br>
+                            <select name="category" id="category_list" required>
+                                <option selected="selected"></option>
+                                {% for i in category %}
 
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div>--OR--</div>
+                                    <option value="{{ i.category }}" id="{{ i.id }}">{{ i.category }}</option>
+
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div>--OR--</div>
+                    {% else %}
+                        {{ Category }}
+                        create a new category please !!
+                        <div class="category"></div>
+                    {% endif %}
+
                     <br>
                     <button class="btn" id="new_category">New Category</button>
+
+
                 {% endif %}
                 <div class="question_section">
 
@@ -116,9 +124,9 @@
                 {#        <div>If wanna change the time of the exam {{ time.name }}. Fill the following field <label style="background-color:lightgray;">Current time :{{ test.time }}</label></div>#}
                 {#        <label for="time">New time :<input type="text" name="time" placeholder="format = hh:mm:ss"/></label>#}
                 <div class="button_group" style="margin: 2%;">
-                    <button type="submit"    class="btn btn-primary">{% if display %}Update{% else %}Add
+                    <button type="submit" class="btn btn-primary">{% if display %}Update{% else %}Add
                         Another{% endif %}</button>
-                    <a class="btn btn-primary" href='../endadmin'> Finish</a>
+                    <a class="btn btn-primary" href='../adminchoice'> Finish</a>
                     {% if display %}
 
                         <button class="btn btn-danger" id="delete" style="float: right; background-color: lightcoral;">

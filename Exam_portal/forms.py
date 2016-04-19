@@ -24,6 +24,15 @@ YES_OR_NO = (('y', 'yes'),
 #                                 widget=forms.PasswordInput(attrs={"name": "password1", "type": "password"}))
 
 
+class AdminLoginForm(forms.Form):
+
+    username = forms.CharField(max_length=30)
+    password = forms.CharField(widget=forms.PasswordInput())
+
+
+
+
+
 class AdminForm(forms.Form):
     question = forms.CharField(label='Question Text', max_length=225, required=True)
     marks = forms.IntegerField(label='marks', required=True)

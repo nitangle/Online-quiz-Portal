@@ -124,17 +124,20 @@ $(document).ready(function (event) {
 
 
 
-    // console.log(true);
+    console.log(true);
     var entry = 1;
     $('#new_category').click(function (event) {
         event.preventDefault();
+        console.log("Hello inside category");
 
         if ($('#category_list').val() == '' && entry == 1) {
             $('.category').append("<input type='text' name='new_category' placeholder='Name of new category' required/>");
             $('#category_list').attr("disabled",true);
             entry = 0;
-
-
+           }
+        else{
+            $('.category').append("<input type='text' name='new_category' placeholder='Name of new category' required/>");
+            entry = 0;
         }
     });
 
@@ -388,8 +391,6 @@ $(document).ready(function (event) {
             selectedVal = selected.val();
             console.log(selectedVal);
         }
-
-
         $.ajax({
             type: "POST",
             url: "http://127.0.0.1:8000/exam/next/",
@@ -418,7 +419,6 @@ $(document).ready(function (event) {
                 //         $(this).attr('checked',true);
                 //     }
                 // });
-
                 checkmarked(data['radio_checked_key']);
 
 
